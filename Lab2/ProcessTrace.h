@@ -11,16 +11,33 @@
  * Created on January 19, 2018, 4:14 PM
  */
 
+#include <string>
+#include <cstdlib>
+#include <fstream>
+#include <vector>
+#include <sstream>
+#include <iostream>
+
+using namespace std;
+
 #ifndef PROCESSTRACE_H
 #define PROCESSTRACE_H
 
 class ProcessTrace {
 public:
-    ProcessTrace();
-    ProcessTrace(const ProcessTrace& orig);
+    ProcessTrace(string name);
     virtual ~ProcessTrace();
+    void Execute();
+    
+    //Rule of 3: prevent use of copy, assign
+    ProcessTrace(const ProcessTrace&) = delete;
+    ProcessTrace &operator=(const ProcessTrace&) = delete;
+    
+    //Rule of 5: prevent use of move and move assign
+    ProcessTrace(const ProcessTrace&&) = delete;
+    ProcessTrace &operator=(const ProcessTrace&&) = delete;
 private:
-
+    ifstream file;
 };
 
 #endif /* PROCESSTRACE_H */

@@ -9,5 +9,10 @@
         <group name="OS">
             <file>file:/home/jordanshae10/NetBeansProjects/Labs/Lab2/main.cpp</file>
         </group>
+        <group>
+            <file>file:/home/jordanmohler/Documents/Labs/Labs/Lab2/ProcessTrace.cpp</file>
+            <file>file:/home/jordanmohler/Documents/Labs/Labs/Lab2/ProcessTrace.h</file>
+            <file>file:/home/jordanmohler/Documents/Labs/Labs/Lab2/main.cpp</file>
+        </group>
     </open-files>
 </project-private>
