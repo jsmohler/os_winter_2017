@@ -35,15 +35,15 @@ void ProcessTrace::Execute() {
 
             if (command.compare("alloc") == 0){
                 uint32_t size;
-                iss >> size;
+                iss >> std::hex >> size;
                 vec.resize(size);
             } else if (command.compare("compare") == 0) { 
                 uint32_t addr;
-                iss >> addr;
+                iss >> std::hex >> addr;
                 vector<uint8_t> expvals;
                 uint8_t val;
                 while (!iss.eof()) {
-                    iss >> val;
+                    iss >> std::hex >> val;
                     expvals.push_back(val);  
                 }
                 for (int i = 0; i < expvals.size(); i++) {
@@ -53,38 +53,41 @@ void ProcessTrace::Execute() {
                 }
             } else if (command.compare("put") == 0) { 
                 uint32_t addr;
-                iss >> addr;
+                iss >> std::hex >> addr;
+                cout << "\nAddress: " << addr << "\n";
+                cout << vec.at(addr) << "\n";
                 uint8_t val;
                 while (!iss.eof()) {
-                    iss >> val;
+                    iss >> std::hex >> val;
+                    cout << val << "\n";
                     vec.at(addr) = val;
                     addr++;
                 }
             } else if (command.compare("fill") == 0) {  
                 uint32_t addr;
-                iss >> addr;
+                iss >> std::hex >> addr;
                 uint32_t count;
-                iss >> count;
+                iss >> std::hex >> count;
                 uint8_t val;
-                iss >> val;
+                iss >> std::hex >> val;
                 for (int i = 0; i < count; i++) {
                     vec.at(addr+1) = val;
                 }
             } else if (command.compare("copy") == 0) { 
                 uint32_t dest_addr;
-                iss >> dest_addr;
+                iss >> std::hex >> dest_addr;
                 uint32_t src_addr;
-                iss >> src_addr;
+                iss >> std::hex >> src_addr;
                 uint32_t count;
-                iss >> count;
+                iss >> std::hex >> count;
                 for (int i = 0; i < count; i++) {
                     vec.at(dest_addr + i) = vec.at(src_addr + i);
                 }
             } else if (command.compare("dump") == 0) { 
                 uint32_t addr;
-                iss >> addr;
+                iss >> std::hex >> addr;
                 uint32_t count;
-                iss >> count;
+                iss >> std::hex >> count;
                 cout << addr << "\n";
                 for (int i = 0; i < count; i++) {
                     cout << vec.at(addr+i) << " ";
