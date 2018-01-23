@@ -32,8 +32,9 @@ void ProcessTrace::Execute() {
             istringstream iss(s);
             string command;
             iss >> command;
-            cout << line << ": " << command << " ";
+            cout << std::dec << line << ": " << command << " ";
             line++;
+            cout << std::hex;
 
             if (command.compare("alloc") == 0){
                 uint32_t size;
@@ -52,6 +53,7 @@ void ProcessTrace::Execute() {
                     cout << val << " ";
                     expvals.push_back(val);  
                 }
+                
                 for (int i = 0; i < expvals.size(); i++) {
                     if (vec.at(addr+i) != expvals.at(i)) {
                         cout << "error at address " << addr << ", expected " << vec.at(addr+i) << ", actual is " << expvals.at(i) << "\n"; 
@@ -91,6 +93,7 @@ void ProcessTrace::Execute() {
                 for (int i = 0; i < count; i++) {
                     vec.at(dest_addr + i) = vec.at(src_addr + i);
                 }
+                cout << "\n";
             } else if (command.compare("dump") == 0) { 
                 uint32_t addr;
                 iss >> std::hex >> addr;
