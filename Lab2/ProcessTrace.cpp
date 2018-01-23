@@ -79,6 +79,7 @@ void ProcessTrace::Execute() {
                 iss >> std::hex >> count;
                 uint32_t val;
                 iss >> std::hex >> val;
+                cout << addr << " " << count << " " << val;
                 for (int i = 0; i < count; i++) {
                     vec.at(addr+1) = val;
                 }
@@ -90,6 +91,7 @@ void ProcessTrace::Execute() {
                 iss >> std::hex >> src_addr;
                 uint32_t count;
                 iss >> std::hex >> count;
+                cout << dest_addr << " " << src_addr << " " << count;
                 for (int i = 0; i < count; i++) {
                     vec.at(dest_addr + i) = vec.at(src_addr + i);
                 }
@@ -99,7 +101,7 @@ void ProcessTrace::Execute() {
                 iss >> std::hex >> addr;
                 uint32_t count;
                 iss >> std::hex >> count;
-                cout << addr << "\n";
+                cout << addr << " " << count << "\n";
                 for (int i = 0; i < count; i++) {
                     cout << vec.at(addr+i) << " ";
                     if (i%16 == 0) {
