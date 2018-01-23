@@ -40,8 +40,8 @@ void ProcessTrace::Execute() {
             } else if (command.compare("compare") == 0) { 
                 uint32_t addr;
                 iss >> std::hex >> addr;
-                vector<uint8_t> expvals;
-                uint8_t val;
+                vector<uint32_t> expvals;
+                uint32_t val;
                 while (!iss.eof()) {
                     iss >> std::hex >> val;
                     expvals.push_back(val);  
@@ -55,8 +55,7 @@ void ProcessTrace::Execute() {
                 uint32_t addr;
                 iss >> std::hex >> addr;
                 cout << "\nAddress: " << addr << "\n";
-                cout << vec.at(addr) << "\n";
-                uint8_t val;
+                uint32_t val;
                 while (!iss.eof()) {
                     iss >> std::hex >> val;
                     cout << val << "\n";
@@ -68,7 +67,7 @@ void ProcessTrace::Execute() {
                 iss >> std::hex >> addr;
                 uint32_t count;
                 iss >> std::hex >> count;
-                uint8_t val;
+                uint32_t val;
                 iss >> std::hex >> val;
                 for (int i = 0; i < count; i++) {
                     vec.at(addr+1) = val;
