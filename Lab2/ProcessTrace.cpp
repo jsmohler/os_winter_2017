@@ -51,8 +51,6 @@ void ProcessTrace::Execute() {
                 uint32_t val;
                 uint32_t oval;
                 
-                
-                
                 while (!iss.eof()) {
                     iss >> std::hex >> val;
                     cout << val << " ";
@@ -86,7 +84,7 @@ void ProcessTrace::Execute() {
                 iss >> std::hex >> val;
                 cout << addr << " " << count << " " << val;
                 for (int i = 0; i < count; i++) {
-                    vec.at(addr+1) = val;
+                    vec.at(addr+i) = val;
                 }
                 cout << "\n"; // to keep it pretty and similar to sample output file
             } else if (command.compare("copy") == 0) { 
@@ -108,8 +106,9 @@ void ProcessTrace::Execute() {
                 iss >> std::hex >> count;
                 cout << addr << " " << count << "\n";
                 for (int i = 0; i < count; i++) {
-                    //cout << std::hex << vec.at(addr+i)++ << " ";
-                    printf("%hhx ",vec[addr+i]);
+                    //cout << std::hex << std::setw(2) << vec.at(addr+i)++ << " ";
+                    uint8_t temp = vec[addr+i];
+                    printf("%hhx ",temp);
                     if (i%16 == 0) {
                         cout << "\n";
                     }
