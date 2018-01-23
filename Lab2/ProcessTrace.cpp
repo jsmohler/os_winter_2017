@@ -13,14 +13,21 @@
 
 #include "ProcessTrace.h"
 
+/*
+ * The constructor takes a single string argument, which is the name of the execution trace file. 
+ * The constructor opens the trace file and performs other initialization required by the class.
+ */
 ProcessTrace::ProcessTrace(string name) {
     file.open(name);
 }
 
-
+/*
+ * The destructor for the class should close the trace file.
+ */
 ProcessTrace::~ProcessTrace() {
     file.close();
 }
+
 
 void ProcessTrace::Execute() {
     vector<uint8_t> vec(100);
@@ -36,20 +43,28 @@ void ProcessTrace::Execute() {
             line++;
             cout << std::hex;
 
+            
+            /* 
+             * Allocate memory for size bytes, addressed from 0 to size-1. 
+             * The first line of the file is an alloc command. 
+             * The subsequent alloc commands used change the amount of allocated memory. 
+             * All of the contents of the newly-allocated memory are initialized to 0.
+             */
             if (command.compare("alloc") == 0){
                 uint32_t size;
                 iss >> std::hex >> size;
                 cout << std::hex << size << "\n";
                 vec.resize(size);
                 
+             /*
+              * Compares bytes starting at addr; expected_values is a list of byte values, separated by white space.
+              */
             } else if (command.compare("compare") == 0) { 
                 uint32_t addr;
                 iss >> std::hex >> addr;
                 cout << addr << " ";
-                vector<uint32_t> orgvals;
                 vector<uint32_t> expvals;
                 uint32_t val;
-                uint32_t oval;
                 
                 while (!iss.eof()) {
                     iss >> std::hex >> val;
@@ -57,6 +72,11 @@ void ProcessTrace::Execute() {
                     expvals.push_back(val);  
                 }
                 
+                /* 
+                 * If the actual values of bytes starting at addr don't match the expected_values, 
+                 * write an error message to standard error for each mismatch with the address, the expected value, 
+                 * and the actual value (all in hexadecimal). 
+                 */
                 for (int i = 0; i < expvals.size(); i++) {
                     if (vec.at(addr+i) != expvals.at(i)) {
                         if (i == 0) {
@@ -72,6 +92,10 @@ void ProcessTrace::Execute() {
                     }
                 }
                 cout << "\n";
+                
+             /*
+             * Store values starting at addr; values is a list of byte values, separated by white space.
+             */
             } else if (command.compare("put") == 0) { 
                 uint32_t addr;
                 iss >> std::hex >> addr;
@@ -83,7 +107,11 @@ void ProcessTrace::Execute() {
                     vec.at(addr) = val;
                     addr++;
                 }
-                cout << "\n"; // to keep it pretty and similar to sample output file
+                cout << "\n";
+                
+              /*
+               * Store count copies of value starting at addr.
+               */  
             } else if (command.compare("fill") == 0) {  
                 uint32_t addr;
                 iss >> std::hex >> addr;
@@ -95,7 +123,12 @@ void ProcessTrace::Execute() {
                 for (int i = 0; i < count; i++) {
                     vec.at(addr+i) = val;
                 }
-                cout << "\n"; // to keep it pretty and similar to sample output file
+                cout << "\n"; 
+                
+                /*
+                 * Copy count bytes from src_addr to dest_addr. 
+                 * The source and destination ranges will not overlap.
+                 */
             } else if (command.compare("copy") == 0) { 
                 uint32_t dest_addr;
                 iss >> std::hex >> dest_addr;
@@ -108,6 +141,12 @@ void ProcessTrace::Execute() {
                     vec.at(dest_addr + i) = vec.at(src_addr + i);
                 }
                 cout << "\n";
+                
+                /*
+                 * Writing a line with addr to standard output, followed on separate lines by count bytes starting at addr. 
+                 * Writing 16 bytes per line, with a space between adjacent values. 
+                 * Print each byte as exactly 2 digits with a leading 0 for values less than 10 (hex).
+                 */
             } else if (command.compare("dump") == 0) { 
                 uint32_t addr;
                 iss >> std::hex >> addr;
@@ -123,11 +162,8 @@ void ProcessTrace::Execute() {
                     }
                 }
             }
-        }
-            
-            
-    }
-        
+        }  
+    }   
 }
 
 

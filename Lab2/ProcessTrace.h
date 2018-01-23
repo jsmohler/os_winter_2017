@@ -26,8 +26,25 @@ using namespace std;
 
 class ProcessTrace {
 public:
+    /*
+     *Constructor
+     */
     ProcessTrace(string name);
+    
+    /*
+     *Destructor
+     */
     virtual ~ProcessTrace();
+    
+    /*
+     * Execute - method allocates an empty array as an std::vector<uint8_t> type. 
+     * It then executes the commands in the trace file, 
+     * using the vector as the memory referenced by the commands.
+     * 
+     * @param There are no parameters for this method.
+     * 
+     * @return the output in hexadecimal format for numeric data from the trace records
+     */
     void Execute();
     
     //Rule of 3: prevent use of copy, assign
@@ -38,6 +55,10 @@ public:
     ProcessTrace(const ProcessTrace&&) = delete;
     ProcessTrace &operator=(const ProcessTrace&&) = delete;
 private:
+    /*
+     * Created a private variable in the ProcessTrace header file 
+     * so that we would have some way to access the stream and close it.
+     */
     ifstream file;
 };
 
