@@ -24,6 +24,7 @@ ProcessTrace::~ProcessTrace() {
 
 void ProcessTrace::Execute() {
     vector<uint8_t> vec(100);
+    int line = 1;
     
     if (file.is_open()) {
         string s;
@@ -31,19 +32,24 @@ void ProcessTrace::Execute() {
             istringstream iss(s);
             string command;
             iss >> command;
-            cout << command;
+            cout << line << ": " << command << " ";
+            line++;
 
             if (command.compare("alloc") == 0){
                 uint32_t size;
                 iss >> std::hex >> size;
+                cout << std::hex << size << "\n";
                 vec.resize(size);
+                
             } else if (command.compare("compare") == 0) { 
                 uint32_t addr;
                 iss >> std::hex >> addr;
+                cout << addr << " ";
                 vector<uint32_t> expvals;
                 uint32_t val;
                 while (!iss.eof()) {
                     iss >> std::hex >> val;
+                    cout << val << " ";
                     expvals.push_back(val);  
                 }
                 for (int i = 0; i < expvals.size(); i++) {
@@ -51,17 +57,19 @@ void ProcessTrace::Execute() {
                         cout << "error at address " << addr << ", expected " << vec.at(addr+i) << ", actual is " << expvals.at(i) << "\n"; 
                     }
                 }
+                cout << "\n";
             } else if (command.compare("put") == 0) { 
                 uint32_t addr;
                 iss >> std::hex >> addr;
-                cout << "\nAddress: " << addr << "\n";
+                cout << addr << " ";
                 uint32_t val;
                 while (!iss.eof()) {
                     iss >> std::hex >> val;
-                    cout << val << "\n";
+                    cout << val << " ";
                     vec.at(addr) = val;
                     addr++;
                 }
+                cout << "\n"; // to keep it pretty and similar to sample output file
             } else if (command.compare("fill") == 0) {  
                 uint32_t addr;
                 iss >> std::hex >> addr;
@@ -72,6 +80,7 @@ void ProcessTrace::Execute() {
                 for (int i = 0; i < count; i++) {
                     vec.at(addr+1) = val;
                 }
+                cout << "\n"; // to keep it pretty and similar to sample output file
             } else if (command.compare("copy") == 0) { 
                 uint32_t dest_addr;
                 iss >> std::hex >> dest_addr;
