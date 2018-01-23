@@ -59,7 +59,16 @@ void ProcessTrace::Execute() {
                 
                 for (int i = 0; i < expvals.size(); i++) {
                     if (vec.at(addr+i) != expvals.at(i)) {
-                        cout << "error at address " << addr << ", expected " << vec.at(addr+i) << ", actual is " << expvals.at(i) << "\n"; 
+                        if (i == 0) {
+                            cout << std::endl;
+                        }
+                        cout << "error at address ";
+                        printf("%02x", addr+i);
+                        cout << ", expected ";
+                        printf("%hhx", expvals.at(i));
+                        cout << ", actual is ";
+                        printf("%hhx", vec.at(addr+i));
+                        cout << std::endl;
                     }
                 }
                 cout << "\n";
@@ -105,11 +114,11 @@ void ProcessTrace::Execute() {
                 uint16_t count;
                 iss >> std::hex >> count;
                 cout << addr << " " << count << "\n";
+                cout << addr << std::endl;
                 for (int i = 0; i < count; i++) {
-                    //cout << std::hex << std::setw(2) << vec.at(addr+i)++ << " ";
                     uint8_t temp = vec[addr+i];
-                    printf("%hhx ",temp);
-                    if (i%16 == 0) {
+                    printf("%02x ",temp);
+                    if ((i+1)%16 == 0) {
                         cout << "\n";
                     }
                 }

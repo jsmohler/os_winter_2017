@@ -14,7 +14,7 @@ using namespace std;
  * 
  */
 int main(int argc, char** argv) {
-    ProcessTrace trace(argv[1]);
+    ProcessTrace trace(argv[2]);
     trace.Execute();
     
 }
