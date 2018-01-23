@@ -46,8 +46,13 @@ void ProcessTrace::Execute() {
                 uint32_t addr;
                 iss >> std::hex >> addr;
                 cout << addr << " ";
+                vector<uint32_t> orgvals;
                 vector<uint32_t> expvals;
                 uint32_t val;
+                uint32_t oval;
+                
+                
+                
                 while (!iss.eof()) {
                     iss >> std::hex >> val;
                     cout << val << " ";
@@ -99,11 +104,12 @@ void ProcessTrace::Execute() {
             } else if (command.compare("dump") == 0) { 
                 uint32_t addr;
                 iss >> std::hex >> addr;
-                uint32_t count;
+                uint16_t count;
                 iss >> std::hex >> count;
                 cout << addr << " " << count << "\n";
                 for (int i = 0; i < count; i++) {
-                    cout << vec.at(addr+i) << " ";
+                    //cout << std::hex << vec.at(addr+i)++ << " ";
+                    printf("%hhx ",vec[addr+i]);
                     if (i%16 == 0) {
                         cout << "\n";
                     }
