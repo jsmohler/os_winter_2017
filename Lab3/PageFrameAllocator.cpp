@@ -19,3 +19,6 @@ PageFrameAllocator::PageFrameAllocator(int num_frames) {
 PageFrameAllocator::~PageFrameAllocator() {
 }
 
+PageFrameAllocator::Node<uint8_t>() {
+    
+}
