@@ -2,11 +2,10 @@
  * File:   main.cpp
  * Author: Jordan Mohler, Cedric Smith, Lexie Hermosura
  *
- * Created on January 19, 2018, 4:09 PM
+ * Created on January 27, 2018, 11:38 PM
  */
 
 #include <cstdlib>
-#include "ProcessTrace.h"
 
 using namespace std;
 
@@ -14,8 +13,7 @@ using namespace std;
  * 
  */
 int main(int argc, char** argv) {
-    ProcessTrace trace(argv[1]);
-    trace.Execute();
-    
+
+    return 0;
 }
 
