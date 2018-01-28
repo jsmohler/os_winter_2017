@@ -35,11 +35,16 @@ SinglyLinkedList::last() {
 }
 
 SinglyLinkedList::getElement(int index) {
-    Node n = head;
-    for (int i = 0; i < index; i++) {
-        n = n.getNext();
+    if (index >= 0 && index <= size) {
+        if (isEmpty) return 0;
+        Node n = head;
+        for (int i = 0; i < index; i++) {
+            n = n.getNext();
+        }
+        return n.getElement();
+    } else {
+        throw std::invalid_argument("Invalid index");
     }
-    return n.getElement();
 }
 
 SinglyLinkedList::add(int index, uint8_t val) {
