@@ -14,9 +14,11 @@ PageFrameAllocator::PageFrameAllocator(int num_frames) {
     page_frames_total = num_frames;
     page_frames_free = 0;
     free_list_head = 0xFFFFFFFF;
+    
 }
 
 PageFrameAllocator::~PageFrameAllocator() {
+        
 }
 
 

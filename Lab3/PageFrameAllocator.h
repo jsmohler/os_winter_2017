@@ -5,6 +5,8 @@
  * Created on January 27, 2018, 11:39 PM
  */
 
+#include "SinglyLinkedList.h"
+
 #ifndef PAGEFRAMEALLOCATOR_H
 #define PAGEFRAMEALLOCATOR_H
 
@@ -48,17 +50,16 @@ private:
 
  //getters
 uint8_t PageFrameAllocator::get_memory() {
-    return memory;
-    
+    return memory;  
 }
 
 uint32_t PageFrameAllocator::get_page_frames_free() { 
     return page_frames_free; 
-    }
+}
 
 uint32_t PageFrameAllocator::get_page_frames_total() { 
     return page_frames_total; 
-    }
+}
 
 uint32_t PageFrameAllocator::get_free_list_head(){
     return free_list_head;
