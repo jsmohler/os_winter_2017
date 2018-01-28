@@ -19,6 +19,14 @@ PageFrameAllocator::PageFrameAllocator(int num_frames) {
 PageFrameAllocator::~PageFrameAllocator() {
 }
 
-PageFrameAllocator::Node<uint8_t>() {
+
+PageFrameAllocator::Allocate(uint32_t count, std::vector<uint32_t> &page_frames) {
+    
     
 }
+
+PageFrameAllocator::Deallocate(uint32_t count, std::vector<uint32_t>& page_frames){
+    
+    
+}
+

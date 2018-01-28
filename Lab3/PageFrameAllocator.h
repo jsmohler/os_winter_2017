@@ -21,6 +21,17 @@ public:
     PageFrameAllocator(const PageFrameAllocator&&) = delete;
     PageFrameAllocator &operator=(const PageFrameAllocator&&) = delete;
     
+    
+    uint32_t get_page_frames_free() const;
+    uint32_t get_page_frames_total() const;
+    uint32_t get_free_list_head() const;
+    std::vector<uint8_t> get_memory() const;
+    
+    bool Allocate(uint32_t count, std::vector<uint32_t> &page_frames);
+    
+    bool Deallocate(uint32_t count, std::vector<uint32_t> &page_frames);
+    
+    
 private:
     //Byte array that will contain the page frames to be managed
     std::vector<uint8_t> memory;
@@ -34,6 +45,26 @@ private:
     //The page frame number of the first page frame in the free list (0xFFFFFFFF if list empty)
     uint32_t free_list_head;
 };
+
+ //getters
+uint8_t PageFrameAllocator::get_memory() {
+    return memory;
+    
+}
+
+uint32_t PageFrameAllocator::get_page_frames_free() { 
+    return page_frames_free; 
+    }
+
+uint32_t PageFrameAllocator::get_page_frames_total() { 
+    return page_frames_total; 
+    }
+
+uint32_t PageFrameAllocator::get_free_list_head(){
+    return free_list_head;
+}
+
+
 
 #endif /* PAGEFRAMEALLOCATOR_H */
 
