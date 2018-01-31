@@ -66,7 +66,7 @@ bool PageFrameAllocator::Deallocate(uint32_t count, std::vector<uint32_t>& page_
     
 uint32_t PageFrameAllocator::printFromArray(int index) {
     uint32_t v32;
-    memcpy(&v32, &memory[index], sizeof(uint32_t));
-    std::cout << v32 << std::endl;
+    memcpy(&v32, &memory[index*0x1000], sizeof(uint32_t));
+    return v32;
 }
 

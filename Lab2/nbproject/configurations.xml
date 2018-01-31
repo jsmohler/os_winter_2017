@@ -27,6 +27,7 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>sample2.txt</itemPath>
     <itemPath>trace1.txt</itemPath>
     <itemPath>trace2.txt</itemPath>
   </logicalFolder>
@@ -48,6 +49,8 @@
       <item path="ProcessTrace.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="sample2.txt" ex="false" tool="3" flavor2="0">
       </item>
       <item path="trace1.txt" ex="false" tool="3" flavor2="0">
       </item>
@@ -79,6 +82,8 @@
       <item path="ProcessTrace.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="sample2.txt" ex="false" tool="3" flavor2="0">
       </item>
       <item path="trace1.txt" ex="false" tool="3" flavor2="0">
       </item>
