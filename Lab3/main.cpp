@@ -30,8 +30,8 @@ int main(int argc, char** argv) {
     std::getline(file, s);
     istringstream sstream(s);
     uint32_t num_page_frames;
-    sstream >> num_page_frames;
-    std::cout << ">" << num_page_frames << std::endl;
+    sstream >> std::hex >> num_page_frames;
+    std::cout << ">" << std::hex << num_page_frames << std::endl;
     std::vector<uint32_t> page_frames_allocated;
 
     PageFrameAllocator pfa(num_page_frames);
@@ -39,16 +39,16 @@ int main(int argc, char** argv) {
     while (std::getline(file, s)) {
         istringstream iss(s);
         int command;
-        iss >> command;
+        iss >> std::hex >> command;
         //Reading each input file line (including the first line), then writing the line to output, preceded by the '>" character.
-        std::cout << ">" << command;
+        std::cout << std::hex << ">" << command;
 
 
         //to deallocate page frames
         if (command == 0) {
             //number of page frames to deallocate
             uint32_t amount;
-            iss >> amount;
+            iss >> std::hex >> amount;
             //Reading each input file line (including the first line), then writing the line to output, preceded by the '>" character.
             std::cout << " " << amount << std::endl;
             bool b = pfa.Deallocate(amount, page_frames_allocated);
@@ -65,9 +65,9 @@ int main(int argc, char** argv) {
         } else if (command == 1) {
             //number of page frames to deallocate
             uint32_t amount;
-            iss >> amount;
+            iss >> std::hex >> amount;
             //Reading each input file line (including the first line), then writing the line to output, preceded by the '>" character.
-            std::cout << " " << amount << std::endl;
+            std::cout << " " << std::hex << amount << std::endl;
             bool b = pfa.Allocate(amount, page_frames_allocated);
 
             if (b) {

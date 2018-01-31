@@ -38,7 +38,7 @@ bool PageFrameAllocator::Allocate(uint32_t count, std::vector<uint32_t> &page_fr
         uint32_t next;
         for (uint32_t i = 0; i < count; i++) {
             page_frames.push_back(free_list_head);
-            memcpy(&next, &memory[free_list_head], sizeof(uint32_t));
+            memcpy(&next, &memory[free_list_head*0x1000], sizeof(uint32_t));
             free_list_head = next;
             page_frames_free--;
         }
