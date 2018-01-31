@@ -5,8 +5,16 @@
  * Created on January 27, 2018, 11:39 PM
  */
 
+
+
 #ifndef PAGEFRAMEALLOCATOR_H
 #define PAGEFRAMEALLOCATOR_H
+
+#include <vector>
+#include <cstring>
+#include <cstdlib>
+#include <cstdint>
+#include <iostream>
 
 class PageFrameAllocator {
 public:
@@ -22,10 +30,10 @@ public:
     PageFrameAllocator &operator=(const PageFrameAllocator&&) = delete;
     
     
-    uint32_t get_page_frames_free() const;
-    uint32_t get_page_frames_total() const;
-    uint32_t get_free_list_head() const;
-    std::vector<uint8_t> get_memory() const;
+    uint32_t get_page_frames_free() const { return page_frames_free; }
+    uint32_t get_page_frames_total() const { return page_frames_total; }
+    uint32_t get_free_list_head() const { return free_list_head; }
+    std::vector<uint8_t> get_memory() const { return memory; }
     
     bool Allocate(uint32_t count, std::vector<uint32_t> &page_frames);
     
@@ -45,25 +53,6 @@ private:
     //The page frame number of the first page frame in the free list (0xFFFFFFFF if list empty)
     uint32_t free_list_head;
 };
-
- //getters
-uint8_t PageFrameAllocator::get_memory() {
-    return memory;  
-}
-
-uint32_t PageFrameAllocator::get_page_frames_free() { 
-    return page_frames_free; 
-}
-
-uint32_t PageFrameAllocator::get_page_frames_total() { 
-    return page_frames_total; 
-}
-
-uint32_t PageFrameAllocator::get_free_list_head(){
-    return free_list_head;
-}
-
-
 
 #endif /* PAGEFRAMEALLOCATOR_H */
 

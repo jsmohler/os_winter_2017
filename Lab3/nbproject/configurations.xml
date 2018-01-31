@@ -4,9 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>Node.h</itemPath>
       <itemPath>PageFrameAllocator.h</itemPath>
-      <itemPath>SinglyLinkedList.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -15,9 +13,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>Node.cpp</itemPath>
       <itemPath>PageFrameAllocator.cpp</itemPath>
-      <itemPath>SinglyLinkedList.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -41,18 +37,13 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <ccTool>
+          <standard>11</standard>
+        </ccTool>
       </compileType>
-      <item path="Node.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Node.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="PageFrameAllocator.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PageFrameAllocator.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="SinglyLinkedList.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="SinglyLinkedList.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -77,17 +68,9 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="Node.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Node.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="PageFrameAllocator.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PageFrameAllocator.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="SinglyLinkedList.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="SinglyLinkedList.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
