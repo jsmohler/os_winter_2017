@@ -29,16 +29,57 @@ public:
     PageFrameAllocator(const PageFrameAllocator&&) = delete;
     PageFrameAllocator &operator=(const PageFrameAllocator&&) = delete;
     
-    
+    /*
+     * get_page_frames_free() 
+     * takes no parameters
+     * returns the total number of free page frames
+     */
     uint32_t get_page_frames_free() const { return page_frames_free; }
+    
+    /*
+     * get_page_frames_total()
+     * takes no parameters
+     * returns the total number of page frames in memory
+     */
     uint32_t get_page_frames_total() const { return page_frames_total; }
+    
+    /*
+     * get_free_list_head()
+     * takes no parameters
+     * returns the page frame number of the first page frame in the free list (0xFFFFFFFF if list empty)
+     */
     uint32_t get_free_list_head() const { return free_list_head; }
+    
+    /*
+     * get_memory()
+     * takes no parameters
+     * returns a vector that contains all page frames, including ones that have been deallocated
+     */
     std::vector<uint8_t> get_memory() const { return memory; }
     
+    /*
+     * Allocate(uint32_t count, std::vector<uint32_t> &page_frames)
+     * takes a uint32_t called count which is the number of page frames to be allocated in memory
+     * takes a reference to a vector of <uint32_t> that pushes count page frames onto page_frames
+     * returns true if the page frames were successfully allocated, but false if count > page_frames_free, in which case
+     * no page frames are to be allocated
+     */
     bool Allocate(uint32_t count, std::vector<uint32_t> &page_frames);
     
+    /*
+     * Deallocate(uint32_t count, std::vector<uint32_t> &page_frames)
+     * takes a uint32_t called count which is the number of page frames to be deallocated from memory
+     * takes a reference to a vector of <uint32_t> that pops count page frames from page_frames
+     * returns true if the count <= the size of page_frames, but false otherwise, in which case no page frames
+     * are freed.
+     */
     bool Deallocate(uint32_t count, std::vector<uint32_t> &page_frames);
     
+    /*
+     * printFromArray(int index)
+     * takes an integer index
+     * returns the page frame number at index in the free list
+     */
     uint32_t printFromArray(int index);
     
     

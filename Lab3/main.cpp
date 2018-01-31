@@ -82,7 +82,6 @@ int main(int argc, char** argv) {
             std::cout << std::endl;
             std::cout << " ";
             int index = pfa.get_free_list_head();
-            uint32_t page;
             for (int i = 0; i < pfa.get_page_frames_free(); i++) {
                 std:: cout << index << " ";
                 index = pfa.printFromArray(index);
