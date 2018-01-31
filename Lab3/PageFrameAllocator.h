@@ -18,7 +18,7 @@
 
 class PageFrameAllocator {
 public:
-    PageFrameAllocator(int num_frames);
+    PageFrameAllocator(uint32_t num_frames);
     virtual ~PageFrameAllocator();
     
     //Rule of 3: prevent use of copy, assign
@@ -38,6 +38,8 @@ public:
     bool Allocate(uint32_t count, std::vector<uint32_t> &page_frames);
     
     bool Deallocate(uint32_t count, std::vector<uint32_t> &page_frames);
+    
+    uint32_t printFromArray(int index);
     
     
 private:

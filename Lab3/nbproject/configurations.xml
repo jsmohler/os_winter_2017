@@ -27,6 +27,8 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>../../../../Downloads/Lab3Data/sample0.txt</itemPath>
+    <itemPath>../../../../Downloads/Lab3Data/sample1.txt</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -41,6 +43,16 @@
           <standard>11</standard>
         </ccTool>
       </compileType>
+      <item path="../../../../Downloads/Lab3Data/sample0.txt"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Downloads/Lab3Data/sample1.txt"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="PageFrameAllocator.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PageFrameAllocator.h" ex="false" tool="3" flavor2="0">
@@ -68,6 +80,16 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="../../../../Downloads/Lab3Data/sample0.txt"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Downloads/Lab3Data/sample1.txt"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="PageFrameAllocator.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PageFrameAllocator.h" ex="false" tool="3" flavor2="0">
