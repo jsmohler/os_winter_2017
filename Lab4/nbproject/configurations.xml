@@ -42,18 +42,18 @@
         <ccTool>
           <standard>11</standard>
           <incDir>
-            <pElem>../MemorySubsystem</pElem>
+            <pElem>../MemorySubsystem/MemorySubsystem</pElem>
           </incDir>
         </ccTool>
         <linkerTool>
           <linkerLibItems>
             <linkerLibProjectItem>
-              <makeArtifact PL="../MemorySubsystem"
+              <makeArtifact PL="../MemorySubsystem/MemorySubsystem"
                             CT="3"
                             CN="Debug"
                             AC="true"
                             BL="true"
-                            WD="../MemorySubsystem"
+                            WD="../MemorySubsystem/MemorySubsystem"
                             BC="${MAKE}  -f Makefile CONF=Debug"
                             CC="${MAKE}  -f Makefile CONF=Debug clean"
                             OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libmemorysubsystem.a">

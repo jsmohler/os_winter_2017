@@ -48,6 +48,7 @@ public:
      */
     void Execute();
     
+    
     //Rule of 3: prevent use of copy, assign
     ProcessTrace(const ProcessTrace&) = delete;
     ProcessTrace &operator=(const ProcessTrace&) = delete;
@@ -61,6 +62,7 @@ private:
      * so that we would have some way to access the stream and close it.
      */
     ifstream file;
+    
 };
 
 #endif /* PROCESSTRACE_H */

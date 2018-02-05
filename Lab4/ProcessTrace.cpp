@@ -15,6 +15,7 @@
 #include <MMU.h>
 #include <cmath> 
 #include <cstdlib>
+#include <sstream>
 
 
 /*
@@ -37,6 +38,9 @@ ProcessTrace::~ProcessTrace() {
 void ProcessTrace::Execute() {
 
     //vector<uint8_t> vec(100);
+    mem::Addr numPageFrames;
+    
+    
     int line = 1;
     
     if (file.is_open()) {
@@ -67,17 +71,22 @@ void ProcessTrace::Execute() {
                     roundSize = 0x1000;
              
                 }
-                
-                mem::Addr numPageFrames = roundSize/0x1000;
- 
-                mem::MMU mem(numPageFrames);
-                
-                cout << std::hex << size << " , " << mem.get_frame_count() << "\n";
+               
+    
+                numPageFrames = roundSize/0x1000;
+               
+                cout << std::hex << size << "\n";
                 
              /*
               * Compares bytes starting at addr; expected_values is a list of byte values, separated by white space.
               */
-            } else if (command.compare("compare") == 0) { 
+            } 
+            mem::MMU mem(numPageFrames);
+           
+           
+            
+            
+            if (command.compare("compare") == 0) { 
                 mem::Addr addr;
                 iss >> std::hex >> addr;
                 cout << addr << " ";
@@ -163,7 +172,7 @@ void ProcessTrace::Execute() {
                 for (int i = 0; i < count; i++) {
                     uint8_t source;
                     mem.get_byte(&source, src_addr+i);
-                    mem.put_byte(dest_addr + i, source);
+                    mem.put_byte(dest_addr + i, &source);
                 }
                 cout << "\n";
                 
@@ -181,7 +190,7 @@ void ProcessTrace::Execute() {
                 cout << addr << std::endl;
                 for (int i = 0; i < count; i++) {
                     uint8_t temp;
-                    mem.get_byte(&temp, addr+i)
+                    mem.get_byte(&temp, addr+i);
                     printf("%02x ",temp);
                     if ((i+1)%16 == 0) {
                         cout << "\n";
