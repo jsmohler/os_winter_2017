@@ -53,13 +53,13 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=../MemorySubsystem/MemorySubsystem/dist/Debug/GNU-Linux/libmemorysubsystem.a
+LDLIBSOPTIONS=../MemorySubsystem/dist/Debug/GNU-Linux/libmemorysubsystem.a
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/lab4
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/lab4: ../MemorySubsystem/MemorySubsystem/dist/Debug/GNU-Linux/libmemorysubsystem.a
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/lab4: ../MemorySubsystem/dist/Debug/GNU-Linux/libmemorysubsystem.a
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/lab4: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
@@ -68,16 +68,16 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/lab4: ${OBJECTFILES}
 ${OBJECTDIR}/ProcessTrace.o: ProcessTrace.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../MemorySubsystem/MemorySubsystem -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ProcessTrace.o ProcessTrace.cpp
+	$(COMPILE.cc) -g -I../MemorySubsystem -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ProcessTrace.o ProcessTrace.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../MemorySubsystem/MemorySubsystem -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -I../MemorySubsystem -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
-	cd ../MemorySubsystem/MemorySubsystem && ${MAKE}  -f Makefile CONF=Debug
+	cd ../MemorySubsystem && ${MAKE}  -f Makefile CONF=Debug
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
@@ -85,7 +85,7 @@ ${OBJECTDIR}/main.o: main.cpp
 
 # Subprojects
 .clean-subprojects:
-	cd ../MemorySubsystem/MemorySubsystem && ${MAKE}  -f Makefile CONF=Debug clean
+	cd ../MemorySubsystem && ${MAKE}  -f Makefile CONF=Debug clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl

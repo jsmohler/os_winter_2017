@@ -34,13 +34,7 @@ ProcessTrace::~ProcessTrace() {
 }
 
 
-
 void ProcessTrace::Execute() {
-
-    //vector<uint8_t> vec(100);
-    mem::Addr numPageFrames;
-    
-    
     int line = 1;
     
     if (file.is_open()) {
@@ -73,20 +67,15 @@ void ProcessTrace::Execute() {
                 }
                
     
-                numPageFrames = roundSize/0x1000;
+                mem::Addr numPageFrames = roundSize/0x1000;
+                mem = new mem::MMU(numPageFrames);
                
                 cout << std::hex << size << "\n";
                 
              /*
               * Compares bytes starting at addr; expected_values is a list of byte values, separated by white space.
               */
-            } 
-            mem::MMU mem(numPageFrames);
-           
-           
-            
-            
-            if (command.compare("compare") == 0) { 
+            } else if (command.compare("compare") == 0) { 
                 mem::Addr addr;
                 iss >> std::hex >> addr;
                 cout << addr << " ";
@@ -109,17 +98,17 @@ void ProcessTrace::Execute() {
                  * and the actual value (all in hexadecimal). 
                  */
                 for (int i = 0; i < expvals.size(); i++) {
-                    mem.get_byte(&inMem, addr+i);
-                    if (inMem != expvals.at(i)) {
+                    mem -> get_byte(&inMem, addr+i);
+                    //cout << "InMem: " << inMem <<std::endl;
+                    //cout << "ExpVals: " << expvals[i] <<std::endl;
+                    if (inMem != expvals[i]) {
                         if (i == 0) {
                             cout << std::endl;
                         }
                         cout << "error at address ";
                         printf("%02x", addr+i);
-                        cout << ", expected ";
-                        printf("%hhx", expvals[i]);
-                        cout << ", actual is ";
-                        printf("%hhx", inMem);
+                        cout << ", expected " << expvals[i];
+                        cout << ", actual is " << inMem;
                         cout << std::endl;
                     }
                 }
@@ -136,7 +125,7 @@ void ProcessTrace::Execute() {
                 while (!iss.eof()) {
                     iss >> std::hex >> val;
                     cout << val << " ";
-                    mem.put_byte(addr, &val);
+                    mem -> put_byte(addr, &val);
                     addr++;
                 }
                 cout << "\n";
@@ -145,7 +134,7 @@ void ProcessTrace::Execute() {
                * Store count copies of value starting at addr.
                */  
             } else if (command.compare("fill") == 0) {  
-                uint32_t addr;
+                mem::Addr addr;
                 iss >> std::hex >> addr;
                 uint32_t count;
                 iss >> std::hex >> count;
@@ -153,7 +142,7 @@ void ProcessTrace::Execute() {
                 iss >> std::hex >> val;
                 cout << addr << " " << count << " " << val;
                 for (int i = 0; i < count; i++) {
-                    mem.put_byte(addr+i, &val);
+                    mem -> put_byte(addr+i, &val);
                 }
                 cout << "\n"; 
                 
@@ -171,8 +160,8 @@ void ProcessTrace::Execute() {
                 cout << dest_addr << " " << src_addr << " " << count;
                 for (int i = 0; i < count; i++) {
                     uint8_t source;
-                    mem.get_byte(&source, src_addr+i);
-                    mem.put_byte(dest_addr + i, &source);
+                    mem -> get_byte(&source, src_addr+i);
+                    mem -> put_byte(dest_addr + i, &source);
                 }
                 cout << "\n";
                 
@@ -190,7 +179,7 @@ void ProcessTrace::Execute() {
                 cout << addr << std::endl;
                 for (int i = 0; i < count; i++) {
                     uint8_t temp;
-                    mem.get_byte(&temp, addr+i);
+                    mem -> get_byte(&temp, addr+i);
                     printf("%02x ",temp);
                     if ((i+1)%16 == 0) {
                         cout << "\n";

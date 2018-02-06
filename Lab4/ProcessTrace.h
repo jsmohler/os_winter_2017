@@ -62,7 +62,7 @@ private:
      * so that we would have some way to access the stream and close it.
      */
     ifstream file;
-    
+    mem::MMU *mem;  
 };
 
 #endif /* PROCESSTRACE_H */
