@@ -100,11 +100,8 @@ void ProcessTrace::Execute() {
                  * and the actual value (all in hexadecimal). 
                  */
                 for (int i = 0; i < expvals.size(); i++) {
-                    for (int j = 0; j < 4; j++) {
-                        mem -> get_byte(&inMem, addr+j);
-                        memcpy(&v32, &inMem, sizeof(uint32_t));
-                    }
-                    cout << "V32 " << std::hex << v32 << std::endl;
+                    mem -> get_byte(&inMem, addr+i);
+                    memcpy(&v32, &inMem, sizeof(uint32_t));
                     if (v32 != expvals[i]) {
                         if (i == 0) {
                             cout << std::endl;
@@ -132,12 +129,10 @@ void ProcessTrace::Execute() {
                 while (!iss.eof()) {
                     iss >> std::hex >> v32;
                     cout << v32 << " ";
-                    for (int i = 0; i < 4; i++) {
-                        memcpy(&memory[i], &v32, sizeof(uint32_t));
-                    }
-                    for (int i = 0; i < 4; i++) {
-                        mem -> put_byte(addr+i, &memory[i]);
-                    }
+                    //for (int i = 0; i < 1; i++) {
+                        memcpy(&memory[0], &v32, sizeof(uint32_t));
+                        mem -> put_byte(addr, &memory[0]);
+                    //}
                     addr++;
                 }
                 cout << "\n";
@@ -150,11 +145,13 @@ void ProcessTrace::Execute() {
                 iss >> std::hex >> addr;
                 uint32_t count;
                 iss >> std::hex >> count;
-                uint8_t val;
-                iss >> std::hex >> val;
-                cout << addr << " " << count << " " << val;
+                uint32_t v32;
+                iss >> std::hex >> v32;
+                cout << addr << " " << count << " " << v32;
+                uint8_t values;
                 for (int i = 0; i < count; i++) {
-                    mem -> put_byte(addr, &val);
+                    memcpy(&values, &v32, sizeof(uint32_t));
+                    mem -> put_byte(addr+i, &values);
                 }
                 cout << "\n"; 
                 
