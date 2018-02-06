@@ -15,6 +15,7 @@
 #include <MMU.h>
 #include <cmath> 
 #include <cstdlib>
+#include <cstring>
 #include <sstream>
 
 
@@ -91,6 +92,7 @@ void ProcessTrace::Execute() {
                 }
                 
                 uint8_t inMem;
+                uint32_t v32;
                 
                 /* 
                  * If the actual values of bytes starting at addr don't match the expected_values, 
@@ -98,17 +100,21 @@ void ProcessTrace::Execute() {
                  * and the actual value (all in hexadecimal). 
                  */
                 for (int i = 0; i < expvals.size(); i++) {
-                    mem -> get_byte(&inMem, addr+i);
-                    //cout << "InMem: " << inMem <<std::endl;
-                    //cout << "ExpVals: " << expvals[i] <<std::endl;
-                    if (inMem != expvals[i]) {
+                    for (int j = 0; j < 4; j++) {
+                        mem -> get_byte(&inMem, addr+j);
+                        memcpy(&v32, &inMem, sizeof(uint32_t));
+                    }
+                    cout << "V32 " << std::hex << v32 << std::endl;
+                    if (v32 != expvals[i]) {
                         if (i == 0) {
                             cout << std::endl;
                         }
                         cout << "error at address ";
                         printf("%02x", addr+i);
-                        cout << ", expected " << expvals[i];
-                        cout << ", actual is " << inMem;
+                        cout << ", expected ";
+                        printf("%hhx", expvals[i]);
+                        cout << ", actual is ";
+                        printf("%hhx", v32);
                         cout << std::endl;
                     }
                 }
@@ -121,11 +127,17 @@ void ProcessTrace::Execute() {
                 mem::Addr addr;
                 iss >> std::hex >> addr;
                 cout << addr << " ";
-                uint8_t val;
+                uint32_t v32;
+                std::vector<uint8_t> memory(4);
                 while (!iss.eof()) {
-                    iss >> std::hex >> val;
-                    cout << val << " ";
-                    mem -> put_byte(addr, &val);
+                    iss >> std::hex >> v32;
+                    cout << v32 << " ";
+                    for (int i = 0; i < 4; i++) {
+                        memcpy(&memory[i], &v32, sizeof(uint32_t));
+                    }
+                    for (int i = 0; i < 4; i++) {
+                        mem -> put_byte(addr+i, &memory[i]);
+                    }
                     addr++;
                 }
                 cout << "\n";
@@ -134,7 +146,7 @@ void ProcessTrace::Execute() {
                * Store count copies of value starting at addr.
                */  
             } else if (command.compare("fill") == 0) {  
-                mem::Addr addr;
+                uint32_t addr;
                 iss >> std::hex >> addr;
                 uint32_t count;
                 iss >> std::hex >> count;
@@ -142,7 +154,7 @@ void ProcessTrace::Execute() {
                 iss >> std::hex >> val;
                 cout << addr << " " << count << " " << val;
                 for (int i = 0; i < count; i++) {
-                    mem -> put_byte(addr+i, &val);
+                    mem -> put_byte(addr, &val);
                 }
                 cout << "\n"; 
                 
@@ -180,7 +192,7 @@ void ProcessTrace::Execute() {
                 for (int i = 0; i < count; i++) {
                     uint8_t temp;
                     mem -> get_byte(&temp, addr+i);
-                    printf("%02x ",temp);
+                    printf("%02x ", temp);
                     if ((i+1)%16 == 0) {
                         cout << "\n";
                     }

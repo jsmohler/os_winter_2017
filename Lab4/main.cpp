@@ -16,7 +16,7 @@ using namespace std;
  * and then calls the Execute method of the ProcessTrace instance.
  */
 int main(int argc, char** argv) {
-    ProcessTrace trace(argv[2]);
+    ProcessTrace trace(argv[1]);
     trace.Execute();
     
 }
