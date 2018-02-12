@@ -33,29 +33,35 @@ int main(int argc, char** argv) {
     ifstream file;
     file.open(name);
     string s;
-    uint16_t bd;
-    uint16_t ts;
-    
-    cout << "Block Duration and Time slice: " << std::endl;
-    std::cin >> bd >> " ";
-    std::cin >> ts >> std::endl;
-        
-    std::getline(file, s);
-    istringstream sstream(s);
     string process_name;
-    int process_arrival_time;
-    int process_total_time;
-    int process_block_time;
+    int arrival_time;
+    int total_time;
+    int block_time;
     
-    std::vector<int> list_of_processes;
+    int block_duration;
+    int time_slice;
+    
+    
+    string scheduling_algorithm = "RR";
+
+    if(scheduling_algorithm == "RR")
+    {
+        block_duration = 20;
+        time_slice = 10;
+        std::cout << scheduling_algorithm << " " << block_duration << " " << time_slice << std::endl;
+    }else{
+        
+        block_duration = 20;
+        std::cout << scheduling_algorithm << " " << block_duration << std::endl;
+    }
+    
 
     while (std::getline(file, s)) {
         istringstream iss(s);
-        int process;
-        iss >> std::dec >> process;
-        //Reading each input file line (including the first line), then writing the line to output, preceded by the '>" character.
-        std::cout << process;
 
+        iss >> process_name >> arrival_time >> total_time >> block_time;
+        //Reading each input file line (including the first line), then writing the line to output, preceded by the '>" character.
+       std::cout << process_name << " " << arrival_time << " " << total_time << " " << block_time << std::endl;
  
     }
 }

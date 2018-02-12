@@ -38,6 +38,10 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <ccTool>
+          <stripSymbols>true</stripSymbols>
+          <standard>11</standard>
+        </ccTool>
       </compileType>
       <item path="Scheduler.cpp" ex="false" tool="1" flavor2="0">
       </item>
