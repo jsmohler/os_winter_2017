@@ -50,12 +50,27 @@ void Scheduler::Execute(){
     
 }
 
-void Scheduler::RoundRobin(){
+void Scheduler::RoundRobin()
+{
+ /*
+  *TO-DO: Schedule Round Robin algorithm
+  *Scheduler keeps a circular list of ready processes
+  *Scheduler runs periodically or when a process blocks
+  *The scheduling period is called the time quantum
+  *Each time the scheduler runs it gives the CPU to the next process in the circular list
+  */ 
+    
+    //which data structure is best for the circular list?
     
     std::cout << "RR " << get_block_duration() << " " << get_time_slice() << std::endl;
 }
 
 void Scheduler::SJN()
 {
+    /*
+     * Assumes knowledge of run times in advance
+     * Scheduler always picks shortest job in ready queue to execute next
+    */
+    
     std::cout << "SJN " << get_block_duration() << std::endl;
 }
