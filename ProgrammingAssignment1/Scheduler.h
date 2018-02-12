@@ -34,7 +34,7 @@ public:
     
     void RoundRobin();
     
-    void SJN();
+    void SPN();
     
     void Execute();
     

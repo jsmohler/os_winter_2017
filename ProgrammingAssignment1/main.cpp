@@ -29,7 +29,6 @@ using namespace std;
 int main(int argc, char** argv) {
  
     Scheduler mySchedule(argv[1], 20, 30);
-//    mySchedule.Execute();
     
     mySchedule.Execute();
     

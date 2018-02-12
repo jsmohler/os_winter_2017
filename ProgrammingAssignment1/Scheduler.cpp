@@ -43,7 +43,7 @@ void Scheduler::Execute(){
     }
          
     RoundRobin();
-    SJN();
+    SPN();
         
         
     }
@@ -65,12 +65,12 @@ void Scheduler::RoundRobin()
     std::cout << "RR " << get_block_duration() << " " << get_time_slice() << std::endl;
 }
 
-void Scheduler::SJN()
+void Scheduler::SPN()
 {
     /*
      * Assumes knowledge of run times in advance
      * Scheduler always picks shortest job in ready queue to execute next
     */
     
-    std::cout << "SJN " << get_block_duration() << std::endl;
+    std::cout << "SPN " << get_block_duration() << std::endl;
 }
