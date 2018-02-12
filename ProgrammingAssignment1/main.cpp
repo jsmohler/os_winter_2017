@@ -20,49 +20,20 @@
 #include <cstring>
 #include <cstdint>
 
+#include "Scheduler.h"
+
 
 using namespace std;
 
 
 int main(int argc, char** argv) {
-    
-    
-
-       //Reads a single hex integer specifying the number of page frames from the first line of the input file.
-    string name = argv[1];
-    ifstream file;
-    file.open(name);
-    string s;
-    string process_name;
-    int arrival_time;
-    int total_time;
-    int block_time;
-    
-    int block_duration;
-    int time_slice;
-    
-    
-    string scheduling_algorithm = "RR";
-
-    if(scheduling_algorithm == "RR")
-    {
-        block_duration = 20;
-        time_slice = 10;
-        std::cout << scheduling_algorithm << " " << block_duration << " " << time_slice << std::endl;
-    }else{
-        
-        block_duration = 20;
-        std::cout << scheduling_algorithm << " " << block_duration << std::endl;
-    }
-    
-
-    while (std::getline(file, s)) {
-        istringstream iss(s);
-
-        iss >> process_name >> arrival_time >> total_time >> block_time;
-        //Reading each input file line (including the first line), then writing the line to output, preceded by the '>" character.
-       std::cout << process_name << " " << arrival_time << " " << total_time << " " << block_time << std::endl;
  
-    }
+    Scheduler mySchedule(argv[1], 20, 30);
+//    mySchedule.Execute();
+    
+    mySchedule.Execute();
+    
+    return 0;
+    
 }
 
