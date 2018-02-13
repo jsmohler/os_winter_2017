@@ -34,7 +34,7 @@ public:
     
     void RoundRobin(std::vector<string, std::vector<uint32_t>, std::vector<uint32_t>, std::vector<uint32_t>);
     
-    void SPN();
+    void SPN(std::vector<string>, std::vector<uint32_t>, std::vector<uint32_t>, std::vector<uint32_t>);
     
     void Execute();
     
@@ -56,9 +56,10 @@ public:
     Scheduler &operator=(const Scheduler&&) = delete;
     
 private:
-ifstream file;   
-int block_duration;
-int time_slice;
+    
+    ifstream file;   
+    int block_duration;
+    int time_slice;
     
     
 };

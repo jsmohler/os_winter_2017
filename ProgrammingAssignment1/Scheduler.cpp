@@ -6,9 +6,9 @@
  * Author: Cedric Smith, Jordan Mohler, Lexie Hermosura
  */
 
-#include "Scheduler.h"
 #include <map>
 #include <string>
+#include "Scheduler.h"
 
 
 /*
@@ -147,24 +147,15 @@ void Scheduler::RoundRobin(std::vector<string> process_name, std::vector<uint32_
     }
 }
 
-void Scheduler::SPN(std::vector<string> p, std::vector<int> a, std::vector<int> t, std::vector<int> b) {
+void Scheduler::SPN(std::vector<string> p, std::vector<uint32_t> a, std::vector<uint32_t> t, std::vector<uint32_t> b) 
+{
     int simulation_time = 0;
     std::priority_queue ready_list;
     std::priority_queue blocked_list;
     string current_process;
 
-
+    
 
     std::cout << "SPN " << get_block_duration() << std::endl;
-    std::cout << simulation_time << " " << p.at(current_process) <<
-
-
-
-
-            /*
-             * Assumes knowledge of run times in advance
-             * Scheduler always picks shortest job in ready queue to execute next
-             */
-
-
+    std::cout << simulation_time << " " << p.at(current_process) << std::endl;
 }
