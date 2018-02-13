@@ -21,6 +21,10 @@
 #include <sstream>
 #include <iostream>
 #include <iomanip>
+#include <numeric>
+#include <algorithm>
+#include <iterator>
+#include <functional>
 
 using namespace std;
 
