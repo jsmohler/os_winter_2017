@@ -58,7 +58,7 @@ void Scheduler::Execute() {
         }
 
         RoundRobin(process_name, arrival_time, total_time, block_interval);
-        //SJN(process_name, arrival_time, total_time, block_interval);
+        SPN(process_name, arrival_time, total_time, block_interval);
     }
 }
 
@@ -197,8 +197,8 @@ void Scheduler::RoundRobin(std::vector<string> process_name, std::vector<uint32_
 void Scheduler::SPN(std::vector<string> p, std::vector<uint32_t> a, std::vector<uint32_t> t, std::vector<uint32_t> b) 
 {
     int simulation_time = 0;
-    std::priority_queue<vector> ready_list;
-    std::priority_queue<vector> blocked_list;
+    std::priority_queue<uint32_t> ready_list;
+    std::priority_queue<uint32_t> blocked_list;
     string current_process;
 
     
