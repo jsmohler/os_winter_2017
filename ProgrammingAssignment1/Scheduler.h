@@ -21,6 +21,10 @@
 #include <sstream>
 #include <iostream>
 #include <iomanip>
+#include <numeric>
+#include <algorithm>
+#include <iterator>
+#include <functional>
 
 using namespace std;
 
@@ -32,7 +36,7 @@ public:
     
     virtual ~Scheduler();
     
-    void RoundRobin(std::vector<string, std::vector<uint32_t>, std::vector<uint32_t>, std::vector<uint32_t>);
+    void RoundRobin(std::vector<string>, std::vector<uint32_t>, std::vector<uint32_t>, std::vector<uint32_t>);
     
     void SPN();
     
