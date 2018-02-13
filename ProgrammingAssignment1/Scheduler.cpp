@@ -6,22 +6,15 @@
  * Author: Cedric Smith, Jordan Mohler, Lexie Hermosura
  */
 
-#include <map>
-#include <string>
-#include "Scheduler.h"
-
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- * 
- * Author: Cedric Smith, Jordan Mohler, Lexie Hermosura
- */
-
-#include "Scheduler.h"
 #include <iostream>
 #include <vector>
+#include <map>
+#include <string>
+#include <cstdlib>
+#include <queue>
+#include "Scheduler.h"
+
+using namespace std;
 
 Scheduler::Scheduler(string name, int bd, int ts) {
     file.open(name);
@@ -150,12 +143,12 @@ void Scheduler::RoundRobin(std::vector<string> process_name, std::vector<uint32_
 void Scheduler::SPN(std::vector<string> p, std::vector<uint32_t> a, std::vector<uint32_t> t, std::vector<uint32_t> b) 
 {
     int simulation_time = 0;
-    std::priority_queue ready_list;
-    std::priority_queue blocked_list;
+    std::priority_queue<vector> ready_list;
+    std::priority_queue<vector> blocked_list;
     string current_process;
 
     
 
     std::cout << "SPN " << get_block_duration() << std::endl;
-    std::cout << simulation_time << " " << p.at(current_process) << std::endl;
+    //std::cout << simulation_time << " " << p.at(current_process) << std::endl;
 }
