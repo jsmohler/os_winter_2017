@@ -32,7 +32,7 @@ public:
     
     virtual ~Scheduler();
     
-    void RoundRobin();
+    void RoundRobin(std::vector<string, std::vector<uint32_t>, std::vector<uint32_t>, std::vector<uint32_t>);
     
     void SPN();
     
