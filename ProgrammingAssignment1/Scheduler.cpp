@@ -58,9 +58,12 @@ void Scheduler::Execute() {
         }
 
         
-        RoundRobin(processes);
+       // RoundRobin(processes);
+        SPN(processes);
         
         //RoundRobin(process_name, arrival_time, total_time, block_interval);
+        
+        
         //single_processSPN(process_name, arrival_time, total_time, block_interval);
     }
 }
@@ -188,15 +191,63 @@ void Scheduler::AdvanceProcess(int runtime, int &simulation_time, std::map<uint3
     simulation_time += runtime;
 }
 
-void Scheduler::SPN(std::vector<string> p, std::vector<uint32_t> a, std::vector<uint32_t> t, std::vector<uint32_t> b) 
+void Scheduler::SPN(std::map<uint32_t, std::vector<uint32_t>> processes) 
 {
     int simulation_time = 0;
-    std::priority_queue<uint32_t> ready_list;
-    std::priority_queue<uint32_t> blocked_list;
-    string current_process;
+    bool finished = false;
 
-    
+    while (!finished) {
+         //Add arriving processes
+        for (int k = 0; k < waiting.size(); k++) {
+            if (processes.at(waiting[k])[0] <= simulation_time) {
+                running.push_back(waiting[k]);
+                waiting.erase(waiting.cbegin() + k);
+                k--;
+            }
+        }
+        
+        //unblock
+        for (int m = 0; m < blocked.size(); m++) {
+            if (processes.at(blocked[m])[4] != 0 && processes.at(blocked[m])[4] <= simulation_time) {
+                running.push_back(blocked[m]);
+                blocked.erase(blocked.cbegin() + m);  
+                m--;
+            }
+        }
 
-    std::cout << "SPN " << get_block_duration() << std::endl;
-    //std::cout << simulation_time << " " << p.at(current_process) << std::endl;
+        //move ready to running
+        while (ready.size() != 0) {
+                running.push_back(ready[0]);
+                ready.erase(ready.cbegin());
+        }
+        
+        //if no processes are ready
+        if (running.size() == 0 && blocked.size() != 0) {
+            int runtime = processes.at(blocked[0])[4] - simulation_time;
+            cout << simulation_time << "\t<idle>\t" << runtime << "\tI\n";
+            simulation_time +=runtime;
+        }
+        
+        //run and move to ready or block
+        while (running.size() != 0) {
+            int interval_remain = processes.at(running[0])[2] - processes.at(running[0])[3];
+            int total_remain = processes.at(running[0])[1];
+            
+            int runtime = std::min(interval_remain, total_remain);
+            runtime = std::min(runtime, total_remain);
+            AdvanceProcess(runtime, simulation_time, processes);
+        }
+        
+        //complete when all processes are in terminated
+        finished = (terminated.size() == processes.size());
+   }
+
+    //compute average turnaround
+    double avg_turnaround = 0;
+    for (int i = 0; i < processes.size(); i++) {
+        avg_turnaround += (processes.at(terminated[i])[5] - processes.at(terminated[i])[0]);
+    }
+    avg_turnaround = avg_turnaround / processes.size();
+    cout << simulation_time << "\t<done>\t" << avg_turnaround;
 }
+
