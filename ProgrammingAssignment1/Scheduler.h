@@ -16,6 +16,7 @@
 
 #include <string>
 #include <cstdlib>
+#include <map>
 #include <fstream>
 #include <vector>
 #include <sstream>
@@ -36,9 +37,9 @@ public:
     
     virtual ~Scheduler();
     
-    void RoundRobin(std::vector<string>, std::vector<uint32_t>, std::vector<uint32_t>, std::vector<uint32_t>);
-    
+    void AdvanceProcess(int, int&, std::map<uint32_t, vector<uint32_t>>&);
     void SPN(std::vector<string>, std::vector<uint32_t>, std::vector<uint32_t>, std::vector<uint32_t>);
+    void RoundRobin(std::map<uint32_t, std::vector<uint32_t>>);
     
     void Execute();
     
@@ -64,6 +65,12 @@ private:
     ifstream file;   
     int block_duration;
     int time_slice;
+    
+    std::vector<uint32_t> blocked;
+    std::vector<uint32_t> running;
+    std::vector<uint32_t> ready;
+    std::vector<uint32_t> terminated;
+    std::vector<uint32_t> waiting;
     
     
 };

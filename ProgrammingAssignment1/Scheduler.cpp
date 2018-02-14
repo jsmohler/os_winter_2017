@@ -34,164 +34,158 @@ void Scheduler::Execute() {
     if (file.is_open()) {
         string s;
 
-        std::vector<string> process_name;
-        std::vector<uint32_t> arrival_time;
-        std::vector<uint32_t> total_time;
-        std::vector<uint32_t> block_interval;
-
-        string name;
+        char name;
         uint32_t arrival;
         uint32_t total;
         uint32_t block;
 
-        int num_processes = 0;
+        std::map<uint32_t, std::vector<uint32_t>> processes;
 
         while (std::getline(file, s)) {
             istringstream iss(s);
-
+            std::vector<uint32_t> single_process;
             iss >> name >> arrival >> total >> block;
 
-            process_name.push_back(name);
-            arrival_time.push_back(arrival);
-            total_time.push_back(total);
-            block_interval.push_back(block);
+            single_process.push_back(arrival);
+            single_process.push_back(total);
+            single_process.push_back(block);
+            single_process.push_back(0);
+            single_process.push_back(0);
+            single_process.push_back(0);
+            
+            waiting.push_back(name);
+            processes.insert(std::map<uint32_t, std::vector<uint32_t>>::value_type(name, single_process));
         }
 
-        RoundRobin(process_name, arrival_time, total_time, block_interval);
-        SPN(process_name, arrival_time, total_time, block_interval);
+        
+        RoundRobin(processes);
+        
+        //RoundRobin(process_name, arrival_time, total_time, block_interval);
+        //single_processSPN(process_name, arrival_time, total_time, block_interval);
     }
 }
-
-void Scheduler::RoundRobin(std::vector<string> process_name, std::vector<uint32_t> arrival_time, std::vector<uint32_t> total_time, std::vector<uint32_t> block_interval) {
+/* 
+ * Structure of processes map:
+ *      Key: Name as uint32_t
+ *      0:  Arrival time
+ *      1: Total time to execute
+ *      2: Block interval
+ *      3: Time run
+ *      4: Time to unblock
+ *      5: Termination time
+ */
+void Scheduler::RoundRobin(std::map<uint32_t, std::vector<uint32_t>> processes) {
     int simulation_time = 0;
-    int num_processes = process_name.size();
-    std::vector<int> running_process;
-    std::vector<int> order;
-    std::vector<int> time_run(num_processes);
-    std::vector<int> time_unblocked(num_processes);
+    bool finished = false;
 
-    for (int i = 0; i < arrival_time.size(); i++) {
-        time_unblocked.push_back(arrival_time[i]);
-        running_process.push_back(-1);
-    }
-    
-    int run = 0;
-
-    while (!std::all_of(total_time.begin(), total_time.end(), [](uint32_t j) { return j == 0; })) {
-        run++;
-        if (run > 35) {
-            break;
+    while (!finished) {
+         //Add arriving processes
+        for (int k = 0; k < waiting.size(); k++) {
+            if (processes.at(waiting[k])[0] <= simulation_time) {
+                running.push_back(waiting[k]);
+                waiting.erase(waiting.cbegin() + k);
+                k--;
+            }
         }
         
-        int index = 0;
-        int count = 0;
-        for (int i : running_process) {
-            cout << "I: " << i << std::endl;
-            cout <<"Count: " << count << std::endl;
-            if (i == -1) {
-                for (int l = 0; l < running_process.size(); l++) {
-                    cout << running_process[l] << " ";
-                }
-                cout << std::endl;
-                for (int k = 0; k < time_unblocked.size(); k++) {
-                    if (time_unblocked[k] != 0 && time_unblocked[k] >= simulation_time) {
-                        running_process[count] = k;
-                        time_unblocked[k] = 0;
-                    }
-                }
-                for (int l = 0; l < running_process.size(); l++) {
-                    cout << running_process[l] << " ";
-                }
-                cout << std::endl;
-            } else {
-                for (int l = 0; l < running_process.size(); l++) {
-                    cout << running_process[l] << " ";
-                }
-                cout << std::endl;
-                int runtime = block_interval[i] - time_run[i];
-
-                if (total_time[i] < runtime) {
-                    runtime = total_time[i];
-                }
-
-                if (runtime > 0 && runtime >= time_slice) {
-                    int current_time = simulation_time;
-                    total_time[i] -= time_slice;
-                    time_run[i] += time_slice;
-                    simulation_time += time_slice;
-
-                    //Output Run
-                    if (total_time[i] == 0) {
-                        cout << current_time << " " << process_name[i] << " " << time_slice << " " << "T\n";
-                    } else if (time_run[i] == block_interval[i]) {
-                        running_process.erase(running_process.begin() + count);
-                        int next_process = running_process[count-1];
-                        running_process.erase(running_process.begin());
-                        running_process.push_back(next_process);
-                        running_process.push_back(0xFFFFFFFF);
-                        
-
-                        time_unblocked[count] = current_time + block_duration;
-                        time_run[count] = 0;
-                        cout << current_time << " " << process_name[i] << " " << time_slice << " " << "B\n";
-                        std::cout << std::endl;
-                        break;
-                    } else {
-                        cout << current_time << " " << process_name[i] << " " << time_slice << " " << "S\n";
-                    }
-
-
-                } else if (runtime > 0 && runtime < time_slice) {
-                    int current_time = simulation_time;
-                    total_time[i] -= runtime;
-                    time_run[i] += runtime;
-                    simulation_time += runtime;
-
-                    //Output Run
-                    if (total_time[i] == 0) {
-                        cout << current_time << " " << process_name[i] << " " << runtime << " " << "T\n";
-                    } else if (time_run[i] == block_interval[i]) {
-                        running_process.erase(running_process.begin() + count);
-                        int next_process = running_process[count-1];
-                        running_process.erase(running_process.begin());
-                        running_process.push_back(next_process);
-                        running_process.push_back(0xFFFFFFFF);
-                        
-                        time_unblocked[count] = current_time + block_duration;
-                        time_run[count] = 0;
-                        cout << current_time << " " << process_name[i] << " " << runtime << " " << "B\n";
-                        cout << std::endl;
-                        break;
-                    }
-
-                }
-
+        //unblock
+        for (int m = 0; m < blocked.size(); m++) {
+            if (processes.at(blocked[m])[4] != 0 && processes.at(blocked[m])[4] <= simulation_time) {
+                running.push_back(blocked[m]);
+                blocked.erase(blocked.cbegin() + m);  
+                m--;
             }
-
-//            for (int k = 0; k < time_unblocked.size(); k++) {
-//                if (time_unblocked[k] != 0 && time_unblocked[k] >= simulation_time) {
-//                    running_process[count] = k;
-//                    time_unblocked[k] = 0;
-//                }
-//            }
-
-            for (int k = 0; k < arrival_time.size(); k++) {
-                if (arrival_time[k] <= simulation_time) { 
-                    running_process[k] = k;
-                    arrival_time[k] = 0xFFFF;
-                }
-            }
-            
-//            for (int l = 0; l < running_process.size(); l++) {
-//                cout << running_process[l] << " ";
-//            }
-//            cout << std::endl;
-            cout << std::endl;
-
-            count++;
         }
+
+        //move ready to running
+        while (ready.size() != 0) {
+                running.push_back(ready[0]);
+                ready.erase(ready.cbegin());
+        }
+        
+        //if no processes are ready
+        if (running.size() == 0 && blocked.size() != 0) {
+            int runtime = processes.at(blocked[0])[4] - simulation_time;
+            cout << simulation_time << "\t<idle>\t" << runtime << "\tI\n";
+            simulation_time +=runtime;
+        }
+        
+        //run and move to ready or block
+        while (running.size() != 0) {
+            int interval_remain = processes.at(running[0])[2] - processes.at(running[0])[3];
+            int runtime = std::min(time_slice, interval_remain);
+            int total_remain = processes.at(running[0])[1];
+            runtime = std::min(runtime, total_remain);
+            
+            AdvanceProcess(runtime, simulation_time, processes);
+        }
+        
+        //complete when all processes are in terminated
+        finished = (terminated.size() == processes.size());
+   }
+
+    //compute average turnaround
+    double avg_turnaround = 0;
+    for (int i = 0; i < processes.size(); i++) {
+        avg_turnaround += (processes.at(terminated[i])[5] - processes.at(terminated[i])[0]);
     }
-    std::cout << "RR " << get_block_duration() << " " << get_time_slice() << std::endl;
+    avg_turnaround = avg_turnaround / processes.size();
+    cout << simulation_time << "\t<done>\t" << avg_turnaround;
+}
+
+void Scheduler::AdvanceProcess(int runtime, int &simulation_time, std::map<uint32_t, vector<uint32_t>> &processes) {
+    int i = 0;
+    //Increment time run and decrement total time remaining
+    processes.at(running[i])[3] += runtime;
+    processes.at(running[i])[1] -= runtime;
+
+    //If total time = 0, terminate
+    if (processes.at(running[i])[1] == 0) {
+        //set termination time
+        processes.at(running[i])[5] = simulation_time + runtime;
+        
+        //Add key to terminated
+        terminated.push_back(running[i]);      
+        
+        //Print results
+        cout << simulation_time;
+        printf("\t%c\t", running[i]);
+        cout << runtime << "\tT\n";
+        
+        //Remove key from running
+        running.erase(running.cbegin());
+                
+        //If time run equals block interval, then block    
+    } else if (processes.at(running[i])[3] == processes.at(running[i])[2]) {
+        // Reset time_run
+        processes.at(running[i])[3] = 0;
+
+        //Set time unblock
+        processes.at(running[i])[4] = simulation_time + block_duration + runtime;
+
+        //Print results
+        cout << simulation_time;
+        printf("\t%c\t", running[i]);
+        cout << runtime << "\tB\n";
+        
+        
+        //Remove process from running and place on blocked processes
+        blocked.push_back(running[i]);
+        running.erase(running.cbegin());
+        
+    } else {
+        //Print results
+        cout << simulation_time;
+        printf("\t%c\t", running[i]);
+        cout << runtime << "\tS\n";
+        
+        //Remove process from running and place on ready
+        ready.push_back(running[i]);
+        running.erase(running.cbegin());
+    }
+
+    //Increment simulation time
+    simulation_time += runtime;
 }
 
 void Scheduler::SPN(std::vector<string> p, std::vector<uint32_t> a, std::vector<uint32_t> t, std::vector<uint32_t> b) 
