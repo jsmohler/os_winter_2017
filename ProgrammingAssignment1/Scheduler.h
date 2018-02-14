@@ -40,6 +40,7 @@ public:
     void AdvanceProcess(int, int&, std::map<uint32_t, vector<uint32_t>>&);
     void SPN(std::map<uint32_t, std::vector<uint32_t>>); 
     void RoundRobin(std::map<uint32_t, std::vector<uint32_t>>);
+    void SortToShortest(std::vector<uint32_t>&, std::map<uint32_t, std::vector<uint32_t>>&);
     
     void Execute();
     

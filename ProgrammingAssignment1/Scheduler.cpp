@@ -58,8 +58,8 @@ void Scheduler::Execute() {
         }
 
         
-       // RoundRobin(processes);
-        SPN(processes);
+       //RoundRobin(processes);
+       SPN(processes);
         
         //RoundRobin(process_name, arrival_time, total_time, block_interval);
         
@@ -170,8 +170,7 @@ void Scheduler::AdvanceProcess(int runtime, int &simulation_time, std::map<uint3
         cout << simulation_time;
         printf("\t%c\t", running[i]);
         cout << runtime << "\tB\n";
-        
-        
+
         //Remove process from running and place on blocked processes
         blocked.push_back(running[i]);
         running.erase(running.cbegin());
@@ -217,8 +216,8 @@ void Scheduler::SPN(std::map<uint32_t, std::vector<uint32_t>> processes)
 
         //move ready to running
         while (ready.size() != 0) {
-                running.push_back(ready[0]);
-                ready.erase(ready.cbegin());
+            running.push_back(ready[0]);
+            ready.erase(ready.cbegin());
         }
         
         //if no processes are ready
@@ -230,11 +229,10 @@ void Scheduler::SPN(std::map<uint32_t, std::vector<uint32_t>> processes)
         
         //run and move to ready or block
         while (running.size() != 0) {
+            SortToShortest(running, processes);
             int interval_remain = processes.at(running[0])[2] - processes.at(running[0])[3];
             int total_remain = processes.at(running[0])[1];
-            
             int runtime = std::min(interval_remain, total_remain);
-            runtime = std::min(runtime, total_remain);
             AdvanceProcess(runtime, simulation_time, processes);
         }
         
@@ -251,3 +249,15 @@ void Scheduler::SPN(std::map<uint32_t, std::vector<uint32_t>> processes)
     cout << simulation_time << "\t<done>\t" << avg_turnaround;
 }
 
+void Scheduler::SortToShortest(std::vector<uint32_t> &running, std::map<uint32_t, std::vector<uint32_t>> &processes) {
+    //sort running vector by process length (modified insertion sort)
+    for (int n = 1; n < running.size(); n++) {
+        int m = n;
+        while (m > 0 && processes.at(running[n-1])[2] > processes.at(running[n])[2]) {
+            uint32_t less = running[m];
+            running[m] = running[m-1];
+            running[m-1] = less;
+            m--;
+        }
+    }
+}
