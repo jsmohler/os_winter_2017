@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -20,7 +20,7 @@ Scheduler::Scheduler(string name, string bd, string ts) {
     file.open(name);
     block_duration = stoi(bd);
     time_slice = stoi(ts);
-    //std::cout << block_duration << " " << time_slice << std::endl; 
+   
 
 }
 
@@ -72,8 +72,8 @@ void Scheduler::Execute(string algorithm) {
         }
     }
 }
-/* 
- * Structure of processes map:
+ 
+/* Structure of processes map:
  *      Key: Name as uint32_t
  *      0:  Arrival time
  *      1: Total time to execute
@@ -82,6 +82,7 @@ void Scheduler::Execute(string algorithm) {
  *      4: Time to unblock
  *      5: Termination time
  */
+
 void Scheduler::RoundRobin(std::map<uint32_t, std::vector<uint32_t>> processes) {
     int simulation_time = 0;
     bool finished = false;
