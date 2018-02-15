@@ -28,9 +28,10 @@ using namespace std;
 
 int main(int argc, char** argv) {
  
-    Scheduler mySchedule(argv[1], 20, 10);
+    Scheduler mySchedule(argv[1], argv[2], argv[3]);
     
-    mySchedule.Execute();
+    mySchedule.Execute("RR");
+    mySchedule.Execute("SPN");
     
     return 0;
     

@@ -26,8 +26,11 @@
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" program1_sample1.txt</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" program1_sample2.txt 30 20</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" program1_sample2.txt 20 30</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" program1_sample1.txt 20 10</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" program1_sample1.txt</runcommand>
+        <runcommand>"${OUTPUT_PATH}" program1_sample1.txt 20 10</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>

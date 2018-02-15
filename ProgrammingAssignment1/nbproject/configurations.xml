@@ -28,6 +28,7 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
     <itemPath>program1_sample1.txt</itemPath>
+    <itemPath>program1_sample2.txt</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -50,6 +51,8 @@
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="program1_sample1.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="program1_sample2.txt" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -79,6 +82,8 @@
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="program1_sample1.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="program1_sample2.txt" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

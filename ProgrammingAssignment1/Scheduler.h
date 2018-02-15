@@ -33,16 +33,16 @@ class Scheduler {
     
 public:
    
-    Scheduler(string name, int block_duration, int time_slice);
+    Scheduler(string name, string block_duration, string time_slice);
     
     virtual ~Scheduler();
     
     void AdvanceProcess(int, int&, std::map<uint32_t, vector<uint32_t>>&);
     void SPN(std::map<uint32_t, std::vector<uint32_t>>); 
     void RoundRobin(std::map<uint32_t, std::vector<uint32_t>>);
-    void SortToShortest(std::vector<uint32_t>&, std::map<uint32_t, std::vector<uint32_t>>&);
-    
-    void Execute();
+    void SortToShortest(std::map<uint32_t, std::vector<uint32_t>>&);
+    void Clear();
+    void Execute(string);
     
     
     int get_block_duration() const {
