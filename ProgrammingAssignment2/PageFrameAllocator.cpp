@@ -68,7 +68,7 @@ Addr PageFrameAllocator::Allocate(uint32_t count,
 }
 
 
-bool PageFrameAllocator::Deallocate(Addr count, std::vector<uint32_t>& page_frames, Addr vAddress, mem::MMU& memory){
+bool PageFrameAllocator::Deallocate(Addr count, std::vector<uint32_t>& page_frames, mem::MMU& memory){
     if (count <= page_frames.size()) {
         
         //have a variable to keep track of the current free list head as we deallocate memory
