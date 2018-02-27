@@ -105,12 +105,6 @@ public:
      */
     bool Deallocate(Addr count, std::vector<uint32_t> &page_frames, Addr start, mem::MMU& memory);
     
-    /*
-     * printFromArray(int index)
-     * takes an integer index
-     * returns the page frame number at index in the free list
-     */
-    uint32_t printFromArray(Addr index);
     
     
 private:

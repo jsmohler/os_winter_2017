@@ -30,6 +30,11 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
     <itemPath>trace1v.txt</itemPath>
+    <itemPath>trace2v_multi-page.txt</itemPath>
+    <itemPath>trace3v_high-addr.txt</itemPath>
+    <itemPath>trace4v_multi-l2-tables.txt</itemPath>
+    <itemPath>trace5v_wprotect.txt</itemPath>
+    <itemPath>trace6v_pagefaults.txt</itemPath>
   </logicalFolder>
   <sourceRootList>
     <Elem>../../../../Downloads/Lab3</Elem>
@@ -80,6 +85,16 @@
       </item>
       <item path="trace1v.txt" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="trace2v_multi-page.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="trace3v_high-addr.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="trace4v_multi-l2-tables.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="trace5v_wprotect.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="trace6v_pagefaults.txt" ex="false" tool="3" flavor2="0">
+      </item>
     </conf>
     <conf name="Release" type="1">
       <toolsSet>
@@ -113,6 +128,16 @@
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="trace1v.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="trace2v_multi-page.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="trace3v_high-addr.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="trace4v_multi-l2-tables.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="trace5v_wprotect.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="trace6v_pagefaults.txt" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

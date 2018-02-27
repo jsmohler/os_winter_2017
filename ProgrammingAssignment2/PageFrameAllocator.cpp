@@ -45,22 +45,25 @@ Addr PageFrameAllocator::Allocate(uint32_t count,
   Addr freed_addr = free_list_head*kPageSize;
   
   if (count <= page_frames_free) {  // if enough to allocate
+    std::vector<uint8_t> zero(kPageSize);
     while (count-- > 0) {
       // Return next free frame to caller
       page_frames.push_back(free_list_head);
       
       // De-link frame from head of free list
       memory.get_byte(&page_number, freed_addr);
+      //printf("PN: %02x \n", page_number);
       
       //Clear page
-      memory.put_bytes(freed_addr, size, &clear); 
+      memory.put_bytes(freed_addr, kPageSize, &zero[0]);
       
+      //Increment free list
       free_list_head = page_number;
       --page_frames_free;
     }
     return freed_addr;
   } else {
-    return 0xFFFF;  // do nothing and return error
+    return 0xFFFFFFFF;  // do nothing and return error
   }
 }
 
@@ -88,14 +91,4 @@ bool PageFrameAllocator::Deallocate(Addr count, std::vector<uint32_t>& page_fram
         return false;
     }
 }
-
-
-//uint32_t PageFrameAllocator::printFromArray(Addr index) {
-//    //have a variable to hold page frame number
-//    uint8_t page_number;
-//    
-//    //access the memory at the index and return the page frame number
-//    memory->get_byte(&page_number, index);
-//    return page_number;
-//}
 

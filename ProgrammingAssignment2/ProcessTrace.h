@@ -58,6 +58,7 @@
 #define PROCESSTRACE_H
 
 #include <MMU.h>
+#include <Exceptions.h>
 #include "PageFrameAllocator.h"
 #include <fstream>
 #include <string>
@@ -149,6 +150,9 @@ private:
   void CmdComment(const string &line,
                   const string &cmd,
                   const vector<uint32_t> &cmdArgs);
+  void CmdWritable(const string &line,
+                   const string &cmd,
+                   const vector<uint32_t> &cmdArgs);
 };
 
 #endif /* PROCESSTRACE_H */

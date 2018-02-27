@@ -10,7 +10,8 @@
 
 #include "ProcessTrace.h"
 #include "PageFrameAllocator.h"
-
+#include "Exceptions.h"
+#include <MMU.h>
 #include <algorithm>
 #include <cctype>
 #include <iomanip>
@@ -32,13 +33,12 @@ using namespace std;
 
 ProcessTrace::ProcessTrace(string file_name_, mem::MMU &input, PageFrameAllocator& pfa) 
 : file_name(file_name_), line_number(0), page_frames_allocated(0), allocator(pfa), memory(input) {
-    
 
-   //get virtual address, free_list_head * mem::kPageSize
-    Addr vAddress = 0 * mem::kPageSize;
-    directory_base = vAddress;
    //Allocate one page for page frame directory
     allocator.Allocate(1, page_frames_allocated, memory);
+   //get virtual address, free_list_head * mem::kPageSize
+    Addr vAddress = page_frames_allocated.back() * mem::kPageSize;
+    directory_base = vAddress;
    //new_PMCB with true for virtual mode on
     mem::PMCB new_pmcb(true, directory_base);
    //set memory PMCB to new_PMCB
@@ -62,40 +62,44 @@ void ProcessTrace::Execute(void) {
     string line;                // text line read
     string cmd;                 // command from line
     vector<uint32_t> cmdArgs;   // arguments from line
+    int line_number = 0;
     
-    try {
-      // Select the command to execute
-      while (ParseCommand(line, cmd, cmdArgs)) {
+  // Select the command to execute
+    while (ParseCommand(line, cmd, cmdArgs)) {
         if (cmd != "#") {
           mem::PMCB virtual_mode(true, cmdArgs.at(0));
           memory.set_PMCB(virtual_mode); 
         }
-         
+
+        line_number++;
         
-        if (cmd == "alloc" ) {
-          CmdAlloc(line, cmd, cmdArgs);    // allocate memory
-        } else if (cmd == "compare") {
-          CmdCompare(line, cmd, cmdArgs);  // get and compare multiple bytes
-        } else if (cmd == "put") {
-          CmdPut(line, cmd, cmdArgs);      // put bytes
-        } else if (cmd == "fill") {
-          CmdFill(line, cmd, cmdArgs);     // fill bytes with value
-        } else if (cmd == "copy") {
-          CmdCopy(line, cmd, cmdArgs);     // copy bytes to dest from source
-        } else if (cmd == "dump") {
-          CmdDump(line, cmd, cmdArgs);     // dump byte values to output
-        } else if (cmd == "#") {
-          CmdComment(line, cmd, cmdArgs);
-        } else {
-          cerr << "ERROR: invalid command at line " << line_number << ":\n" 
-                  << line << "\n";
-          exit(2);
+        try {
+            if (cmd == "alloc" ) {
+              CmdAlloc(line, cmd, cmdArgs);    // allocate memory
+            } else if (cmd == "compare") {
+              CmdCompare(line, cmd, cmdArgs);  // get and compare multiple bytes
+            } else if (cmd == "put") {
+              CmdPut(line, cmd, cmdArgs);      // put bytes
+            } else if (cmd == "fill") {
+              CmdFill(line, cmd, cmdArgs);     // fill bytes with value
+            } else if (cmd == "copy") {
+              CmdCopy(line, cmd, cmdArgs);     // copy bytes to dest from source
+            } else if (cmd == "dump") {
+              CmdDump(line, cmd, cmdArgs);     // dump byte values to output
+            } else if (cmd == "#") {
+              CmdComment(line, cmd, cmdArgs);
+            } else if (cmd == "writable") {
+              CmdWritable(line, cmd, cmdArgs);
+            }else {
+              cerr << "ERROR: invalid command at line " << line_number << ":\n" 
+                      << line << "\n";
+              exit(2);
+            }
+        } catch (mem::PageFaultException p) {
+            cout << "Exception type PageFaultException occurred at input line " << line_number << " at virtual address 0x" << std::hex << cmdArgs.at(0) << ": " << p.what() << std::endl; 
+        } catch (mem::WritePermissionFaultException w) {
+            cout << "Exception type WritePermissionFaultException occurred at input line " << line_number << " at virtual address 0x" << std::hex << cmdArgs.at(0) << ": " << w.what() << std::endl;  
         }
-      }
-    } catch (mem::PageFaultException p) {
-        cout << "PageFaultException at " << cmdArgs.at(0) << " " << p.what(); 
-    } catch (mem::WritePermissionFaultException w) {
-        cout << "WritePermissionFaultException at " << cmdArgs.at(0) << " " << w.what(); 
     }
 }
 
@@ -143,34 +147,40 @@ void ProcessTrace::CmdAlloc(const string &line,
     
     std::vector<uint8_t> found_addr_bytes(4); 
     
-    // Get entry in top level page table
-    Addr l1_offset = (start >> (kPageSizeBits + kPageTableSizeBits)) & kPageTableIndexMask;
-    Addr top_level_entry;
-    Addr top_level_entry_pa =
-            pmcb.page_table_base + l1_offset * sizeof(Addr);
-    memory.get_bytes(&found_addr_bytes[0], top_level_entry_pa, sizeof(Addr)); 
+    for (int i = 0; i < page_count; i++) {
+        // Get entry in top level page table
+        Addr l1_offset = (start >> (kPageSizeBits + kPageTableSizeBits)) & kPageTableIndexMask;
+        Addr top_level_entry;
+        Addr top_level_entry_pa =
+                pmcb.page_table_base + l1_offset * sizeof(Addr);
+        //std::cout << "TLE_PA: " << top_level_entry_pa << std::endl;
+        memory.get_bytes(&found_addr_bytes[0], top_level_entry_pa, sizeof(Addr));
+        memcpy(&top_level_entry, &found_addr_bytes[0], sizeof(Addr));
+        //std::cout << "TLE Before Create: " << top_level_entry << std::endl;
 
-    //If top level doesn't exist, build one
-    if((top_level_entry & kPTE_PresentMask) == 0) {
-       top_level_entry = allocator.Allocate(1, page_frames_allocated, memory) | kPTE_PresentMask | kPTE_WritableMask;
-       memory.put_bytes(top_level_entry_pa, sizeof(Addr), reinterpret_cast<uint8_t*>(&top_level_entry));
+        //If top level doesn't exist, build one
+        if((top_level_entry & kPTE_PresentMask) == 0) {
+           top_level_entry = allocator.Allocate(1, page_frames_allocated, memory) | kPTE_PresentMask | kPTE_WritableMask;
+           memory.put_bytes(top_level_entry_pa, sizeof(Addr), reinterpret_cast<uint8_t*>(&top_level_entry));
+        }
+        //std::cout << "TLE After Create: " << top_level_entry << std::endl;
+
+        Addr l2_offset = (start >> kPageSizeBits) & kPageTableIndexMask;
+        Addr second_level_entry;
+        Addr second_level_address = top_level_entry & kPTE_FrameMask;
+        Addr second_level_entry_pa =
+                second_level_address + l2_offset * sizeof(Addr);
+        memory.get_bytes(&found_addr_bytes[0], second_level_entry_pa, sizeof(Addr)); 
+        memcpy(&second_level_entry, &found_addr_bytes[0], sizeof(Addr)); 
+
+        //If second level doesn't exist, build one
+        if((second_level_entry & kPTE_PresentMask) == 0) {
+           second_level_entry = allocator.Allocate(1, page_frames_allocated, memory) | kPTE_PresentMask | kPTE_WritableMask;
+           memory.put_bytes(second_level_entry_pa, sizeof(Addr), reinterpret_cast<uint8_t*>(&second_level_entry));
+        }
+        
+        start+=0x1000;
     }
-    
-    Addr l2_offset = (start >> kPageSizeBits) & kPageTableIndexMask;
-    Addr second_level_entry;
-    Addr second_level_address = top_level_entry & kPTE_FrameMask;
-    Addr second_level_index = (l2_offset >> kPageSizeBits) & kPageTableIndexMask;
-    Addr second_level_entry_pa =
-            second_level_address + second_level_index * sizeof(Addr);
-    memory.get_bytes(&found_addr_bytes[0], second_level_entry_pa, sizeof(Addr)); 
-    memcpy(&second_level_entry, &found_addr_bytes[0], sizeof(Addr)); 
-    
-    //If second level doesn't exist, build one
-    if((second_level_entry & kPTE_PresentMask) == 0) {
-       second_level_entry = allocator.Allocate(1, page_frames_allocated, memory) | kPTE_PresentMask | kPTE_WritableMask;
-       memory.put_bytes(second_level_entry_pa, sizeof(Addr), reinterpret_cast<uint8_t*>(&second_level_entry));
-    }
-  
 }
 
 void ProcessTrace::CmdCompare(const string &line,
@@ -275,4 +285,56 @@ void ProcessTrace::CmdComment(const string &line,
                           const string &cmd,
                           const vector<uint32_t> &cmdArgs) {
     
+}
+
+void ProcessTrace::CmdWritable(const string &line,
+                          const string &cmd,
+                          const vector<uint32_t> &cmdArgs) {
+    Addr page_count = (cmdArgs.at(1) + mem::kPageSize - 1) / mem::kPageSize;
+    Addr start = cmdArgs.at(0);
+    uint32_t status = cmdArgs.at(2);
+    
+    //Set to physical mode
+    mem::PMCB pmcb(false, directory_base);
+    memory.set_PMCB(pmcb);
+    
+    std::vector<uint8_t> found_addr_bytes(4); 
+
+    for (int i = 0; i < page_count; i++) {
+        // Get entry in top level page table
+        Addr l1_offset = (start >> (kPageSizeBits + kPageTableSizeBits)) & kPageTableIndexMask;
+        Addr top_level_entry;
+        Addr top_level_entry_pa =
+                pmcb.page_table_base + l1_offset * sizeof(Addr);
+        memory.get_bytes(&found_addr_bytes[0], top_level_entry_pa, sizeof(Addr));
+        memcpy(&top_level_entry, &found_addr_bytes[0], sizeof(Addr)); 
+
+        //If top level doesn't exist, increment and return
+        if((top_level_entry & kPTE_PresentMask) == 0) {
+            start += 0x1000;
+            return;
+        }
+
+        Addr l2_offset = (start >> kPageSizeBits) & kPageTableIndexMask;
+        Addr second_level_entry;
+        Addr second_level_address = top_level_entry & kPTE_FrameMask;
+        Addr second_level_index = (l2_offset >> kPageSizeBits) & kPageTableIndexMask;
+        Addr second_level_entry_pa =
+                second_level_address + second_level_index * sizeof(Addr);
+        memory.get_bytes(&found_addr_bytes[0], second_level_entry_pa, sizeof(Addr)); 
+        memcpy(&second_level_entry, &found_addr_bytes[0], sizeof(Addr)); 
+
+        //If second level does exist, modify all present entries to writable
+        if((second_level_entry & kPTE_PresentMask) != 0) {
+            //Edit second level to clear writable if status = 0, or set writable if status != 0
+            if (status == 0) {
+                second_level_entry &= ~(kPTE_WritableMask);
+            } else {
+                second_level_entry |= kPTE_WritableMask;
+            }
+            memory.put_bytes(second_level_entry_pa, sizeof(Addr), reinterpret_cast<uint8_t*>(&second_level_entry));
+        } 
+
+        start += 0x1000;
+    }
 }
