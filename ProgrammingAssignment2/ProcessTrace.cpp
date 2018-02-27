@@ -35,11 +35,12 @@ ProcessTrace::ProcessTrace(string file_name_, mem::MMU &input, PageFrameAllocato
     
 
    //get virtual address, free_list_head * mem::kPageSize
-    Addr vAddress = pfa.get_free_list_head() * mem::kPageSize;
+    Addr vAddress = 0 * mem::kPageSize;
+    directory_base = vAddress;
    //Allocate one page for page frame directory
-    allocator.pop(vAddress, 1, memory);
+    allocator.Allocate(1, page_frames_allocated, memory);
    //new_PMCB with true for virtual mode on
-    mem::PMCB new_pmcb(true, vAddress);
+    mem::PMCB new_pmcb(true, directory_base);
    //set memory PMCB to new_PMCB
     memory.set_PMCB(new_pmcb);
     
@@ -132,10 +133,44 @@ bool ProcessTrace::ParseCommand(
 void ProcessTrace::CmdAlloc(const string &line, 
                             const string &cmd, 
                             const vector<uint32_t> &cmdArgs) {
-  // Allocate the specified memory size
-  Addr page_count = (cmdArgs.at(1) + mem::kPageSize - 1) / mem::kPageSize;
-  Addr start = cmdArgs.at(0);
-  //allocator.Allocate(page_count, page_frames_allocated, start, memory);
+    // Allocate the specified memory size
+    Addr page_count = (cmdArgs.at(1) + mem::kPageSize - 1) / mem::kPageSize;
+    Addr start = cmdArgs.at(0);
+    
+    //Set to physical mode
+    mem::PMCB pmcb(false, directory_base);
+    memory.set_PMCB(pmcb);
+    
+    std::vector<uint8_t> found_addr_bytes(4); 
+    
+    // Get entry in top level page table
+    Addr l1_offset = (start >> (kPageSizeBits + kPageTableSizeBits)) & kPageTableIndexMask;
+    Addr top_level_entry;
+    Addr top_level_entry_pa =
+            pmcb.page_table_base + l1_offset * sizeof(Addr);
+    memory.get_bytes(&found_addr_bytes[0], top_level_entry_pa, sizeof(Addr)); 
+
+    //If top level doesn't exist, build one
+    if((top_level_entry & kPTE_PresentMask) == 0) {
+       top_level_entry = allocator.Allocate(1, page_frames_allocated, memory) | kPTE_PresentMask | kPTE_WritableMask;
+       memory.put_bytes(top_level_entry_pa, sizeof(Addr), reinterpret_cast<uint8_t*>(&top_level_entry));
+    }
+    
+    Addr l2_offset = (start >> kPageSizeBits) & kPageTableIndexMask;
+    Addr second_level_entry;
+    Addr second_level_address = top_level_entry & kPTE_FrameMask;
+    Addr second_level_index = (l2_offset >> kPageSizeBits) & kPageTableIndexMask;
+    Addr second_level_entry_pa =
+            second_level_address + second_level_index * sizeof(Addr);
+    memory.get_bytes(&found_addr_bytes[0], second_level_entry_pa, sizeof(Addr)); 
+    memcpy(&second_level_entry, &found_addr_bytes[0], sizeof(Addr)); 
+    
+    //If second level doesn't exist, build one
+    if((second_level_entry & kPTE_PresentMask) == 0) {
+       second_level_entry = allocator.Allocate(1, page_frames_allocated, memory) | kPTE_PresentMask | kPTE_WritableMask;
+       memory.put_bytes(second_level_entry_pa, sizeof(Addr), reinterpret_cast<uint8_t*>(&second_level_entry));
+    }
+  
 }
 
 void ProcessTrace::CmdCompare(const string &line,
@@ -143,6 +178,10 @@ void ProcessTrace::CmdCompare(const string &line,
                               const vector<uint32_t> &cmdArgs) {
   uint32_t addr = cmdArgs.at(0);
 
+  //Set to virtual mode
+  mem::PMCB pmcb(true, directory_base);
+  memory.set_PMCB(pmcb);
+  
   // Compare specified byte values
   size_t num_bytes = cmdArgs.size() - 1;
   uint8_t buffer[num_bytes];
@@ -160,6 +199,10 @@ void ProcessTrace::CmdCompare(const string &line,
 void ProcessTrace::CmdPut(const string &line,
                           const string &cmd,
                           const vector<uint32_t> &cmdArgs) {
+  //Set to virtual mode
+  mem::PMCB pmcb(true, directory_base);
+  memory.set_PMCB(pmcb);
+  
   // Put multiple bytes starting at specified address
   uint32_t addr = cmdArgs.at(0);
   size_t num_bytes = cmdArgs.size() - 1;
@@ -173,6 +216,10 @@ void ProcessTrace::CmdPut(const string &line,
 void ProcessTrace::CmdCopy(const string &line,
                            const string &cmd,
                            const vector<uint32_t> &cmdArgs) {
+  //Set to virtual mode
+  mem::PMCB pmcb(true, directory_base);
+  memory.set_PMCB(pmcb);
+  
   // Copy specified number of bytes to destination from source
   Addr dst = cmdArgs.at(0);
   Addr src = cmdArgs.at(1);
@@ -185,6 +232,10 @@ void ProcessTrace::CmdCopy(const string &line,
 void ProcessTrace::CmdFill(const string &line,
                           const string &cmd,
                           const vector<uint32_t> &cmdArgs) {
+  //Set to virtual mode
+  mem::PMCB pmcb(true, directory_base);
+  memory.set_PMCB(pmcb);
+  
   // Fill a sequence of bytes with the specified value
   Addr addr = cmdArgs.at(0);
   Addr num_bytes = cmdArgs.at(1);
@@ -200,6 +251,10 @@ void ProcessTrace::CmdDump(const string &line,
   uint32_t addr = cmdArgs.at(0);
   uint32_t count = cmdArgs.at(1);
 
+  //Set to virtual mode
+  mem::PMCB pmcb(true, directory_base);
+  memory.set_PMCB(pmcb);
+  
   // Output the address
   cout << std::hex << addr;
 

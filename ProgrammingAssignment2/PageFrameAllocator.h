@@ -87,8 +87,6 @@ public:
     //std::unique_ptr<mem::MMU> get_memory() const { return memory; }
     
     
-    void Alloc(Addr vaddress, Addr count, mem::MMU& memory);
-    
     /*
      * Allocate(uint32_t count, std::vector<uint32_t> &page_frames)
      * takes a uint32_t called count which is the number of page frames to be allocated in memory
@@ -96,7 +94,7 @@ public:
      * returns true if the page frames were successfully allocated, but false if count > page_frames_free, in which case
      * no page frames are to be allocated
      */
-    bool Allocate(Addr count, std::vector<uint32_t> &page_frames, Addr start, mem::MMU& memory);
+    Addr Allocate(uint32_t count, std::vector<uint32_t> &page_frames, mem::MMU& memory);
     
     /*
      * Deallocate(uint32_t count, std::vector<uint32_t> &page_frames)
@@ -114,22 +112,19 @@ public:
      */
     uint32_t printFromArray(Addr index);
     
-    bool pop(Addr vaddress, Addr count, mem::MMU& memory);
-    
     
 private:
     //Memory
     std::unique_ptr<mem::MMU> memory;
-    
    
     //A count of the total number of page frames in memory (memory size divided by 0x1000)
-    Addr page_frames_total;
+    uint32_t page_frames_total;
     
     //The current number of free page frames
-    Addr page_frames_free;
+    uint32_t page_frames_free;
     
     //The page frame number of the first page frame in the free list (0xFFFFFFFF if list empty)
-    Addr free_list_head;
+    uint32_t free_list_head;
 };
 
 #endif /* PAGEFRAMEALLOCATOR_H */

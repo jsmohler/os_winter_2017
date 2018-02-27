@@ -106,6 +106,9 @@ private:
   //Allocator
   PageFrameAllocator& allocator;
   
+  //Directory Base
+  Addr directory_base;
+  
   /**
    * ParseCommand - parse a trace file command.
    *   Aborts program if invalid trace file.
