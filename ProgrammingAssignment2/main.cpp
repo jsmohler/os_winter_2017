@@ -18,9 +18,7 @@
 
 using namespace std;
 
-/*
- * 
- */
+
 int main(int argc, char** argv) {
     
     mem::MMU memory(256);

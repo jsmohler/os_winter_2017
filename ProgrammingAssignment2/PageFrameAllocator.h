@@ -96,7 +96,7 @@ public:
     /*
      * Deallocate - deallocates page frames
      * 
-     * @param a uint32_t called count which is the number of page frames to be deallocated from memory
+     * @param an Addr called count which is the number of page frames to be deallocated from memory
      * @param a reference to a vector of <uint32_t> that pops count page frames from page_frames
      * @param a reference to memory
      * @return true if the count is less than or equal to the size of page_frames, but false otherwise, in which case no page frames

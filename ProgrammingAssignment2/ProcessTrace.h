@@ -21,8 +21,8 @@ public:
    * Constructor - open trace file, initialize processing
    * 
    * @param file_name_ source of trace commands
-   * @param &input number of page frames
-   * @param &pfa page frames to allocate
+   * @param &input a reference to the number of page frames
+   * @param &pfa page a reference to the frames to allocate
    */
   ProcessTrace(string file_name_, mem::MMU &input, PageFrameAllocator &pfa);
   

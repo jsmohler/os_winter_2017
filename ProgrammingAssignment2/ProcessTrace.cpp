@@ -51,10 +51,13 @@ ProcessTrace::ProcessTrace(string file_name_, mem::MMU &input, PageFrameAllocato
     cerr << "ERROR: failed to open trace file: " << file_name << "\n";
     exit(2);
   }
+  
+  
 }
 
 ProcessTrace::~ProcessTrace() {
   trace.close();
+  
 }
 
 void ProcessTrace::Execute(void) {
@@ -96,10 +99,19 @@ void ProcessTrace::Execute(void) {
               exit(2);
             }
         } catch (mem::PageFaultException p) {
-            cout << "Exception type PageFaultException occurred at input line " << line_number << " at virtual address 0x" << std::hex << cmdArgs.at(0) << ": " << p.what() << std::endl; 
+            mem::PMCB current;
+            memory.get_PMCB(current);
+            cout << "Exception type PageFaultException occurred at input line " << std::dec << line_number << " at virtual address 0x" << std::hex << setfill('0') << setw(8) << current.next_vaddress << ": " << p.what() << std::endl; 
+            current.operation_state = mem::PMCB::NONE;
+            memory.set_PMCB(current);
         } catch (mem::WritePermissionFaultException w) {
-            cout << "Exception type WritePermissionFaultException occurred at input line " << line_number << " at virtual address 0x" << std::hex << cmdArgs.at(0) << ": " << w.what() << std::endl;  
+            mem::PMCB current;
+            memory.get_PMCB(current);
+            cout << "Exception type WritePermissionFaultException occurred at input line " << std::dec << line_number << " at virtual address 0x" << std::hex << setfill('0') << setw(8) << current.next_vaddress << ": " << w.what() << std::endl;  
+            current.operation_state = mem::PMCB::NONE;
+            memory.set_PMCB(current);
         }
+
     }
 }
 
@@ -153,17 +165,16 @@ void ProcessTrace::CmdAlloc(const string &line,
         Addr top_level_entry;
         Addr top_level_entry_pa =
                 pmcb.page_table_base + l1_offset * sizeof(Addr);
-        //std::cout << "TLE_PA: " << top_level_entry_pa << std::endl;
+        
         memory.get_bytes(&found_addr_bytes[0], top_level_entry_pa, sizeof(Addr));
         memcpy(&top_level_entry, &found_addr_bytes[0], sizeof(Addr));
-        //std::cout << "TLE Before Create: " << top_level_entry << std::endl;
+       
 
         //If top level doesn't exist, build one
         if((top_level_entry & kPTE_PresentMask) == 0) {
            top_level_entry = allocator.Allocate(1, page_frames_allocated, memory) | kPTE_PresentMask | kPTE_WritableMask;
            memory.put_bytes(top_level_entry_pa, sizeof(Addr), reinterpret_cast<uint8_t*>(&top_level_entry));
         }
-        //std::cout << "TLE After Create: " << top_level_entry << std::endl;
 
         Addr l2_offset = (start >> kPageSizeBits) & kPageTableIndexMask;
         Addr second_level_entry;
@@ -318,11 +329,10 @@ void ProcessTrace::CmdWritable(const string &line,
         Addr l2_offset = (start >> kPageSizeBits) & kPageTableIndexMask;
         Addr second_level_entry;
         Addr second_level_address = top_level_entry & kPTE_FrameMask;
-        Addr second_level_index = (l2_offset >> kPageSizeBits) & kPageTableIndexMask;
         Addr second_level_entry_pa =
-                second_level_address + second_level_index * sizeof(Addr);
+                second_level_address + l2_offset * sizeof(Addr);
         memory.get_bytes(&found_addr_bytes[0], second_level_entry_pa, sizeof(Addr)); 
-        memcpy(&second_level_entry, &found_addr_bytes[0], sizeof(Addr)); 
+        memcpy(&second_level_entry, &found_addr_bytes[0], sizeof(Addr));  
 
         //If second level does exist, modify all present entries to writable
         if((second_level_entry & kPTE_PresentMask) != 0) {
@@ -337,4 +347,8 @@ void ProcessTrace::CmdWritable(const string &line,
 
         start += 0x1000;
     }
+    
 }
+ 
+
+
