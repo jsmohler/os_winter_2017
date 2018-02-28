@@ -47,7 +47,11 @@ const uint32_t kPTE_FrameMask = kPageNumberMask;
 
 class PageFrameAllocator {
 public:
+    
+    //Constructor
     PageFrameAllocator(mem::MMU& input);
+    
+    //Deconstructor
     virtual ~PageFrameAllocator();
     
     //Rule of 3: prevent use of copy, assign
@@ -59,77 +63,60 @@ public:
     PageFrameAllocator &operator=(const PageFrameAllocator&&) = delete;
     
     /*
-     * get_page_frames_free() 
-     * takes no parameters
-     * returns the total number of free page frames
+     * get_page_frames_free - getter for the total number of free page frames
+     * 
+     * @return the total number of free page frames
      */
     Addr get_page_frames_free() const { return page_frames_free; }
     
     /*
-     * get_page_frames_total()
-     * takes no parameters
-     * returns the total number of page frames in memory
+     * get_page_frames_total - getter for the total number of page frames in memory
+     * 
+     * @return the total number of page frames in memory
      */
     Addr get_page_frames_total() const { return page_frames_total; }
     
     /*
-     * get_free_list_head()
-     * takes no parameters
-     * returns the page frame number of the first page frame in the free list (0xFFFFFFFF if list empty)
+     * get_free_list_head - getter for the page frame number of the first page frame in the free list
+     * 
+     * @return the page frame number of the first page frame in the free list (0xFFFFFFFF if list empty)
      */
     Addr get_free_list_head() const { return free_list_head; }
     
     /*
-     * get_memory()
-     * takes no parameters
-     * returns a vector that contains all page frames, including ones that have been deallocated
+     * Allocate - allocates page frames
+     * 
+     * @param a uint32_t called count which is the number of page frames to be allocated in memory
+     * @param a reference to a vector of <uint32_t> that pushes count page frames onto page_frames
+     * @param a reference to memory
+     * @return the page address allocated (removed from the free list and turned into either the directory, a page table, or a page)
      */
-    //std::unique_ptr<mem::MMU> get_memory() const { return memory; }
-    
-    
-    void Alloc(Addr vaddress, Addr count, mem::MMU& memory);
+    Addr Allocate(uint32_t count, std::vector<uint32_t> &page_frames, mem::MMU& memory);
     
     /*
-     * Allocate(uint32_t count, std::vector<uint32_t> &page_frames)
-     * takes a uint32_t called count which is the number of page frames to be allocated in memory
-     * takes a reference to a vector of <uint32_t> that pushes count page frames onto page_frames
-     * returns true if the page frames were successfully allocated, but false if count > page_frames_free, in which case
-     * no page frames are to be allocated
-     */
-    bool Allocate(Addr count, std::vector<uint32_t> &page_frames, Addr start, mem::MMU& memory);
-    
-    /*
-     * Deallocate(uint32_t count, std::vector<uint32_t> &page_frames)
-     * takes a uint32_t called count which is the number of page frames to be deallocated from memory
-     * takes a reference to a vector of <uint32_t> that pops count page frames from page_frames
-     * returns true if the count <= the size of page_frames, but false otherwise, in which case no page frames
+     * Deallocate - deallocates page frames
+     * 
+     * @param an Addr called count which is the number of page frames to be deallocated from memory
+     * @param a reference to a vector of <uint32_t> that pops count page frames from page_frames
+     * @param a reference to memory
+     * @return true if the count is less than or equal to the size of page_frames, but false otherwise, in which case no page frames
      * are freed.
      */
-    bool Deallocate(Addr count, std::vector<uint32_t> &page_frames, Addr start, mem::MMU& memory);
-    
-    /*
-     * printFromArray(int index)
-     * takes an integer index
-     * returns the page frame number at index in the free list
-     */
-    uint32_t printFromArray(Addr index);
-    
-    bool pop(Addr vaddress, Addr count, mem::MMU& memory);
+    bool Deallocate(Addr count, std::vector<uint32_t> &page_frames, mem::MMU& memory);
     
     
 private:
     //Memory
     std::unique_ptr<mem::MMU> memory;
-    
    
     //A count of the total number of page frames in memory (memory size divided by 0x1000)
-    Addr page_frames_total;
+    uint32_t page_frames_total;
     
     //The current number of free page frames
-    Addr page_frames_free;
+    uint32_t page_frames_free;
     
     //The page frame number of the first page frame in the free list (0xFFFFFFFF if list empty)
-    Addr free_list_head;
+    uint32_t free_list_head;
 };
 
 #endif /* PAGEFRAMEALLOCATOR_H */

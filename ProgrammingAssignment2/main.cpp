@@ -6,7 +6,7 @@
 
 /* 
  * File:   main.cpp
- * Author: jordanmohler
+ * Author: Jordan Mohler, Cedric Smith, Lexie Hermosura
  *
  * Created on February 20, 2018, 10:29 AM
  */
@@ -18,14 +18,12 @@
 
 using namespace std;
 
-/*
- * 
- */
+
 int main(int argc, char** argv) {
     
     mem::MMU memory(256);
     PageFrameAllocator alloc(memory);
-    ProcessTrace process("trace1v.txt", memory, alloc);
+    ProcessTrace process(argv[1], memory, alloc);
     process.Execute();
 }
 

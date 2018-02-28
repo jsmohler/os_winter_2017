@@ -54,11 +54,13 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=../MemorySubsystem/MemorySubsystem/dist/Debug/GNU-Linux/libmemorysubsystem.a
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/programmingassignment2
+
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/programmingassignment2: ../MemorySubsystem/MemorySubsystem/dist/Debug/GNU-Linux/libmemorysubsystem.a
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/programmingassignment2: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
@@ -67,20 +69,21 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/programmingassignment2: ${OBJECTFILES
 ${OBJECTDIR}/PageFrameAllocator.o: PageFrameAllocator.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PageFrameAllocator.o PageFrameAllocator.cpp
+	$(COMPILE.cc) -O2 -I../MemorySubsystem/MemorySubsystem -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PageFrameAllocator.o PageFrameAllocator.cpp
 
 ${OBJECTDIR}/ProcessTrace.o: ProcessTrace.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ProcessTrace.o ProcessTrace.cpp
+	$(COMPILE.cc) -O2 -I../MemorySubsystem/MemorySubsystem -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ProcessTrace.o ProcessTrace.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -O2 -I../MemorySubsystem/MemorySubsystem -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
+	cd ../MemorySubsystem/MemorySubsystem && ${MAKE}  -f Makefile CONF=Debug
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
@@ -88,6 +91,7 @@ ${OBJECTDIR}/main.o: main.cpp
 
 # Subprojects
 .clean-subprojects:
+	cd ../MemorySubsystem/MemorySubsystem && ${MAKE}  -f Makefile CONF=Debug clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl
