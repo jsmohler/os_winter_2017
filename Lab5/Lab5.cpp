@@ -35,6 +35,7 @@ int Request[kMaxProcesses][kMaxResources];
 int numProcesses;   // actual number of processes
 int numResources;   // actual number of resources
 
+
 // IsRequestLessEqual - compare row of Request array to Available
 //
 // @param i - index of row in Request array
@@ -52,6 +53,7 @@ bool IsRequestLessEqual(int i) {
           result = false;
       }
   }
+  
   //test to see if correct
   cout << "Is Request <= Available? ";
   if(result)
@@ -69,11 +71,10 @@ bool IsRequestLessEqual(int i) {
 void AddToAvailable(int i) {
     for(int j=0; j<numResources; j++)
     {
-        //test1
-        cout << Available[j] << " + " << Allocation[i][j] << " = ";
+      
         Available[j] = Available[j] + Allocation[i][j];
-        //test2
-        cout << Available[j] << "\n";
+         
+     
     }    
 }
 
@@ -83,7 +84,7 @@ void PrintDeadlocks(void)
 {
     bool Marked[numProcesses];
     //make all processes unmarked
-    for(int j=0; j<numProcesses; j++)
+    for(int j = 0; j<numProcesses; j++)
     {
         Marked[j] = false;
     }
@@ -93,12 +94,13 @@ void PrintDeadlocks(void)
     for(int j=0; j<numProcesses; j++)
     {
         //if the process is not marked and Request is less than or equal to Available
-        if((!(Marked[j]))&&(IsRequestLessEqual(j)))
+        if(!(Marked[j])&&(IsRequestLessEqual(j)))
         {
             //add to available resources and mark process
             AddToAvailable(j);
             Marked[j] = true;
         }
+        
     }
     
     //go through Marked array and see which are unmarked, which are deadlocks
@@ -109,6 +111,7 @@ void PrintDeadlocks(void)
         {
             cout << j << " ";
         }
+        
     }
     
 }
@@ -165,7 +168,7 @@ void ReadSystemConfig(const char *fileName) {
     for (int j = 0; j < numResources; ++j) {
       in >> Allocation[i][j];
       if (in.fail()) {
-        cerr << "ERROR: failed to read Alocation[" << i << "][" << j << "]\n";
+        cerr << "ERROR: failed to read Allocation[" << i << "][" << j << "]\n";
         exit(2);
       }
     }
@@ -209,9 +212,9 @@ int main(int argc, char *argv[]) {
   }
   ReadSystemConfig(argv[1]);
   //test IsRequestLessEqual
-  IsRequestLessEqual(0);
+  //IsRequestLessEqual(0);
   //test AddToAvailable
-  AddToAvailable(1);
+  //AddToAvailable(1);
   
   PrintDeadlocks();
 
