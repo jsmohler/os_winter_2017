@@ -46,20 +46,22 @@ bool IsRequestLessEqual(int i) {
   //go through all of the resources since the rows' cells consist of # of requests to each resource
   for(int j=0; j<numResources; j++)
   {
-      cout << "Request[" << j << "]: " << Request[i][j] <<"\n";
-      cout << "Available[" << j << "]: " << Available[j] << "\n";
+//      cout << "Request[" << j << "]: " << Request[i][j] <<"\n";
+//      cout << "Available[" << j << "]: " << Available[j] << "\n";
       if(Request[i][j]>Available[j])
       {
           result = false;
+         
       }
+      
   }
   
-  //test to see if correct
-  cout << "Is Request <= Available? ";
-  if(result)
-      cout << "True.\n";
-  else
-      cout << "False.\n";
+//  //test to see if correct
+//  cout << "Is Request <= Available? ";
+//  if(result)
+//      cout << "True.\n";
+//  else
+//      cout << "False.\n";
   
   return result;
 }
@@ -71,10 +73,14 @@ bool IsRequestLessEqual(int i) {
 void AddToAvailable(int i) {
     for(int j=0; j<numResources; j++)
     {
-      
         Available[j] = Available[j] + Allocation[i][j];
-         
-     
+
+        
+//         //test1
+//        cout << Available[j] << " + " << Allocation[i][j] << " = ";
+//        Available[j] = Available[j] + Allocation[i][j];
+//        //test2
+//        cout << Available[j] << "\n";
     }    
 }
 
@@ -99,12 +105,25 @@ void PrintDeadlocks(void)
             //add to available resources and mark process
             AddToAvailable(j);
             Marked[j] = true;
+            
+            
         }
         
     }
     
     //go through Marked array and see which are unmarked, which are deadlocks
-    cout << "Deadlocked processes: ";
+ 
+    for(int j=0; j<numProcesses; j++)
+    {
+        if(!Marked[j]&& IsRequestLessEqual(j))
+        {
+            AddToAvailable(j);
+            Marked[j] = true;
+        }
+        
+    }
+    
+      cout << "Deadlocked processes: ";
     for(int j=0; j<numProcesses; j++)
     {
         if(!Marked[j])
@@ -113,6 +132,7 @@ void PrintDeadlocks(void)
         }
         
     }
+    
     
 }
 
