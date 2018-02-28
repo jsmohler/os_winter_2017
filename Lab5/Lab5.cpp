@@ -42,9 +42,14 @@ int numResources;   // actual number of resources
 //          of Available, false otherwise.
 bool IsRequestLessEqual(int i) {
   bool result = true;
-  //
-  // TODO: implement this function
-  //
+  //go through all of the resources since the rows' cells consist of # of requests to each resource
+  for(int j=0; j<numResources; j++)
+  {
+      if(Request[i][j]>Available[j])
+      {
+          result = false;
+      }
+  }
   return result;
 }
 
