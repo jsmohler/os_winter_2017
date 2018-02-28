@@ -9,5 +9,10 @@
         <group name="MemorySubsystem">
             <file>file:/home/mikegoss/COMP3361/Code/Lab5/Lab5.cpp</file>
         </group>
+        <group>
+            <file>file:/home/lexiehermosura/Documents/Labs/Lab5/Lab5.cpp</file>
+            <file>file:/home/lexiehermosura/Documents/Labs/Lab5/another_deadlock.txt</file>
+            <file>file:/home/lexiehermosura/Documents/Labs/Lab5/simple_deadlock.txt</file>
+        </group>
     </open-files>
 </project-private>

@@ -35,9 +35,6 @@ int Request[kMaxProcesses][kMaxResources];
 int numProcesses;   // actual number of processes
 int numResources;   // actual number of resources
 
-//Create Marked Processes array for algorithm
-bool Marked[numProcesses] = false;
-
 // IsRequestLessEqual - compare row of Request array to Available
 //
 // @param i - index of row in Request array
@@ -82,22 +79,21 @@ void AddToAvailable(int i) {
 
 // PrintDeadlocks - print indices of deadlocked processes
 //
-void PrintDeadlocks(void) {
-  //
-  // TODO: implement this function
-  //
-  //implement algorithm 
-//    look for unmarked process
-//    check if Request <= Available
-//    yes, then add available and allocated, then mark process
-//    no, keep looking
+void PrintDeadlocks(void) 
+{
+    bool Marked[numProcesses];
+    //make all processes unmarked
+    for(int j=0; j<numProcesses; j++)
+    {
+        Marked[j] = false;
+    }
     
     //MAYBE need to revise this later; not sure if it will iterate the correct number of times
     
     for(int j=0; j<numProcesses; j++)
     {
         //if the process is not marked and Request is less than or equal to Available
-        if((!Marked[j])&&(IsRequestLessEqual(j)))
+        if((!(Marked[j]))&&(IsRequestLessEqual(j)))
         {
             //add to available resources and mark process
             AddToAvailable(j);
@@ -110,7 +106,9 @@ void PrintDeadlocks(void) {
     for(int j=0; j<numProcesses; j++)
     {
         if(!Marked[j])
+        {
             cout << j << " ";
+        }
     }
     
 }
