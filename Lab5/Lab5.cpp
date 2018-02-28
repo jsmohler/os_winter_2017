@@ -45,11 +45,20 @@ bool IsRequestLessEqual(int i) {
   //go through all of the resources since the rows' cells consist of # of requests to each resource
   for(int j=0; j<numResources; j++)
   {
+      cout << "Request[" << j << "]: " << Request[i][j] <<"\n";
+      cout << "Available[" << j << "]: " << Available[j] << "\n";
       if(Request[i][j]>Available[j])
       {
           result = false;
       }
   }
+  //test to see if correct
+  cout << "Is Request <= Available? ";
+  if(result)
+      cout << "True.\n";
+  else
+      cout << "False.\n";
+  
   return result;
 }
 
@@ -61,6 +70,14 @@ void AddToAvailable(int i) {
   //
   // TODO: implement this function
   //
+    for(int j=0; j<numResources; j++)
+    {
+        //test1
+        cout << Available[j] << " + " << Allocation[i][j] << " = ";
+        Available[j] = Available[j] + Allocation[i][j];
+        //test2
+        cout << Available[j] << "\n";
+    }    
 }
 
 // PrintDeadlocks - print indices of deadlocked processes
@@ -166,6 +183,11 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
   ReadSystemConfig(argv[1]);
+  //test IsRequestLessEqual
+  IsRequestLessEqual(0);
+  //test AddToAvailable
+  AddToAvailable(1);
+  
   PrintDeadlocks();
 
   return 0;

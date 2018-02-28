@@ -26,8 +26,9 @@
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" simple_deadlock.txt</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" simple_non_deadlock.txt</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" simple_deadlock.txt</runcommand>
+        <runcommand>"${OUTPUT_PATH}" simple_non_deadlock.txt</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>
