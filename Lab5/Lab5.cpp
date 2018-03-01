@@ -9,7 +9,7 @@
 //
 // Template author: Mike Goss (mikegoss@cs.du.edu)
 //
-// Student name: [your name here]
+// Student name: Lexie Hermosura, Cedric Smith, Jordan Mohler
 
 #include <fstream>
 #include <iostream>
@@ -46,22 +46,11 @@ bool IsRequestLessEqual(int i) {
   //go through all of the resources since the rows' cells consist of # of requests to each resource
   for(int j=0; j<numResources; j++)
   {
-//      cout << "Request[" << j << "]: " << Request[i][j] <<"\n";
-//      cout << "Available[" << j << "]: " << Available[j] << "\n";
       if(Request[i][j]>Available[j])
       {
-          result = false;
-         
-      }
-      
+          result = false;         
+      }      
   }
-  
-//  //test to see if correct
-//  cout << "Is Request <= Available? ";
-//  if(result)
-//      cout << "True.\n";
-//  else
-//      cout << "False.\n";
   
   return result;
 }
@@ -74,13 +63,6 @@ void AddToAvailable(int i) {
     for(int j=0; j<numResources; j++)
     {
         Available[j] = Available[j] + Allocation[i][j];
-
-        
-//         //test1
-//        cout << Available[j] << " + " << Allocation[i][j] << " = ";
-//        Available[j] = Available[j] + Allocation[i][j];
-//        //test2
-//        cout << Available[j] << "\n";
     }    
 }
 
@@ -95,32 +77,27 @@ void PrintDeadlocks(void)
         Marked[j] = false;
     }
     
-    //MAYBE need to revise this later; not sure if it will iterate the correct number of times
-    
-    for(int j=0; j<numProcesses; j++)
+    //iterate enough times to accommodate for updates to Marked
+    for(int j=0; j<2*numProcesses; j++)
     {
-        //if the process is not marked and Request is less than or equal to Available
-        if(!(Marked[j])&&(IsRequestLessEqual(j)))
+        if(j>=numProcesses)
         {
+            if(!(Marked[j-numProcesses])&&(IsRequestLessEqual(j-numProcesses)))
+            {
+                AddToAvailable(j-numProcesses);
+                Marked[j-numProcesses] = true;
+            }
+        }
+        else
+        {
+            //if the process is unmarked and Request <= Available
+            if(!(Marked[j])&&(IsRequestLessEqual(j)))
+            {
             //add to available resources and mark process
-            AddToAvailable(j);
-            Marked[j] = true;
-            
-            
+                AddToAvailable(j);
+                Marked[j] = true;
+            }      
         }
-        
-    }
-    
-    //go through Marked array and see which are unmarked, which are deadlocks
- 
-    for(int j=0; j<numProcesses; j++)
-    {
-        if(!Marked[j]&& IsRequestLessEqual(j))
-        {
-            AddToAvailable(j);
-            Marked[j] = true;
-        }
-        
     }
     
       cout << "Deadlocked processes: ";
@@ -129,11 +106,8 @@ void PrintDeadlocks(void)
         if(!Marked[j])
         {
             cout << j << " ";
-        }
-        
+        }        
     }
-    
-    
 }
 
 // ReadSystemConfig - read the system configuration from the
@@ -230,11 +204,7 @@ int main(int argc, char *argv[]) {
     cerr << "usage: lab5 filename\n";
     exit(1);
   }
-  ReadSystemConfig(argv[1]);
-  //test IsRequestLessEqual
-  //IsRequestLessEqual(0);
-  //test AddToAvailable
-  //AddToAvailable(1);
+  ReadSystemConfig(argv[1]);5
   
   PrintDeadlocks();
 
