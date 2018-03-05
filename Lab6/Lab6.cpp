@@ -143,24 +143,36 @@ int OptimalPageReplacement(const vector<int> &trace,
     {
         fUse[i] = 0;
     }
-    //check each page frame's future
+    //check each page frame's future usage
     for(int i=traceIndex; i<trace.size(); i++)
     {
-        for(int j=0; j<frameCount; j++)            
-        {
-            for(int k=0; k<trace.size(); k++)
+        for(int j=0; j<frameCount; j++)
+        { 
+            cout << "page frame: " << frameUsage[j*trace.size() + traceIndex] << "\n";
+            
+            //if the page frame's page does not equal the reference string
+            if(!(frameUsage[j*trace.size() + traceIndex]== trace[i]))
             {
-                if(!frameUsage[j*trace.size() + (k-i)]==trace[i])
-                    victimPageFrame = j;
+                fUse[j]++;
             }
         }
-    }           
-    //print out fUse
-    for(int i=0; i<frameCount; i++)
+    } 
+    //pick the largest of the fUse elements to set as the victim page frame
+    int largest = fUse[0];
+    
+    for(int i=1; i<frameCount; i++)
     {
-        cout<<fUse[i]<<" ";
+        if(largest<fUse[i])
+            victimPageFrame = i;
     }
+//    //print out fUse
+//    for(int i=0; i<frameCount; i++)
+//    {
+//        cout<<fUse[i]<<" ";
+//    }
     cout << "\n";
+    cout << "Victim page frame is: " << victimPageFrame << "\n";
+    
     return victimPageFrame; // return the page frame to replace
 }
 
