@@ -131,55 +131,36 @@ int OptimalPageReplacement(const vector<int> &trace,
                            int frameCount,
                            const vector<int> &frameUsage,
                            const vector<int> accessTime) {
-  int victimPageFrame = 0;
-  // TODO: implement the page replacement strategy
-  //       here, setting victimPageFrame to the frame
-  //       number of the page to be replaced.
+    int victimPageFrame = 0;
+    // TODO: implement the page replacement strategy
+    //       here, setting victimPageFrame to the frame
+    //       number of the page to be replaced.
 
-    //create a way of keeping tack of future usage
+    //create a way of keeping track of future usage
     int fUse[frameCount];
     //fill array
     for (int i = 0; i < frameCount; i++) 
     {
         fUse[i] = 0;
     }
-    //check each page frame to see if it's in frameUsage
-    for (int j = 0; j < frameCount; j++) 
+    //check each page frame's future
+    for(int i=traceIndex; i<trace.size(); i++)
     {
-        //if the page is not in a page frame 
-        if (!(trace[traceIndex] == frameUsage[j * trace.size() + traceIndex])) 
+        for(int j=0; j<frameCount; j++)            
         {
-            //check to see its future usage in the trace
-            for (int k = traceIndex; k < trace.size(); k++) 
+            for(int k=0; k<trace.size(); k++)
             {
-                //add to fUse[j]
-                if (!trace[k] == frameUsage[j * trace.size() + traceIndex]) 
-                {
-                    fUse[j]++;
-                }
+                if(!frameUsage[j*trace.size() + (k-i)]==trace[i])
+                    victimPageFrame = j;
             }
-            //keep track of largest future use
-            int largest = fUse[0];
-            int largestIndex = 0;
-            //compare each fUse, updated victimPage as needed, 
-            for (int k = 1; k < frameCount; k++) 
-            {
-                if (fUse[k] > largest)
-                {
-                    largest = fUse[k];
-                    largestIndex = k;
-                }
-            }
-            for(int i=0; i<frameCount; i++)
-            {
-                //cout << fUse[i] << " ";
-            }
-            cout << "\n";
-            cout << largest << " ";
-            victimPageFrame = largestIndex;
         }
+    }           
+    //print out fUse
+    for(int i=0; i<frameCount; i++)
+    {
+        cout<<fUse[i]<<" ";
     }
-
+    cout << "\n";
     return victimPageFrame; // return the page frame to replace
 }
 
