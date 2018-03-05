@@ -135,45 +135,52 @@ int OptimalPageReplacement(const vector<int> &trace,
   // TODO: implement the page replacement strategy
   //       here, setting victimPageFrame to the frame
   //       number of the page to be replaced.
-  
-  //go through the entire reference string
-  for(int i=0; i<trace.size(); i++)
-  {
+
     //create a way of keeping tack of future usage
-    int fUse[frameCount] = 0;
+    int fUse[frameCount];
+    //fill array
+    for (int i = 0; i < frameCount; i++) 
+    {
+        fUse[i] = 0;
+    }
     //check each page frame to see if it's in frameUsage
-    for(int j=0; j<frameCount; j++)
+    for (int j = 0; j < frameCount; j++) 
     {
         //if the page is not in a page frame 
-        if(!(trace[i]==frameUsage[j*trace.size() + i]))
+        if (!(trace[traceIndex] == frameUsage[j * trace.size() + traceIndex])) 
         {
-            //if the page frame is empty
-            if(frameUsage[j*trace.size() + i] == -1)
-            {
-                //give the page frame the page
-                frameUsage[j*trace.size() + i] = trace[i];                
-            }
-            //if not, check to see its future usage in the trace
-            for(int k=i; k<trace.size(); k++)
+            //check to see its future usage in the trace
+            for (int k = traceIndex; k < trace.size(); k++) 
             {
                 //add to fUse[j]
-                if(!trace[k]==frameUsage[j*trace.size() + i])
+                if (!trace[k] == frameUsage[j * trace.size() + traceIndex]) 
                 {
                     fUse[j]++;
                 }
             }
-            //keep track of smallest future use
-            int smallest = fUse[0];
+            //keep track of largest future use
+            int largest = fUse[0];
+            int largestIndex = 0;
             //compare each fUse, updated victimPage as needed, 
-            for(int k=0; k<frameCount; k++)
+            for (int k = 1; k < frameCount; k++) 
             {
-               
+                if (fUse[k] > largest)
+                {
+                    largest = fUse[k];
+                    largestIndex = k;
+                }
             }
+            for(int i=0; i<frameCount; i++)
+            {
+                //cout << fUse[i] << " ";
+            }
+            cout << "\n";
+            cout << largest << " ";
+            victimPageFrame = largestIndex;
         }
     }
-  }
-  
-  return victimPageFrame;  // return the page frame to replace
+
+    return victimPageFrame; // return the page frame to replace
 }
 
 // FIFOPageReplacement - use the FIFO page replacement
