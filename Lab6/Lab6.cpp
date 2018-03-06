@@ -195,6 +195,21 @@ int FIFOPageReplacement(const vector<int> &trace,
   // TODO: implement the page replacement strategy
   //       here, setting victimPageFrame to the frame
   //       number of the page to be replaced.
+  int oldest = accessTime[0];
+  for(int i=1; i<accessTime.size(); i++)
+  {
+      if(oldest > accessTime[i])
+      {
+          oldest = accessTime[i];
+          victimPageFrame = i;
+      }
+  }  
+  cout << "Trace index: " << traceIndex << "\n";
+  for(int i=0; i<accessTime.size(); i++)
+  {
+      cout << accessTime[i] << " ";
+  }
+  cout << "\n";
   
   return victimPageFrame;  // return the page frame to replace
 }
@@ -220,9 +235,20 @@ int LRUPageReplacement(const vector<int> &trace,
                        const vector<int> &frameUsage,
                        const vector<int> accessTime) {
   int victimPageFrame = 0;
-  // TODO: implement the page replacement strategy
-  //       here, setting victimPageFrame to the frame
-  //       number of the page to be replaced.
+  
+  //set oldest to first element of accessTime
+  int oldest = accessTime[0];
+  
+  //compare oldest with the remaining elements of accessTime
+  for(int i=1; i<accessTime.size(); i++)
+  {
+      //choose the oldest timestamp
+      if(oldest > accessTime[i])
+      {
+          oldest = accessTime[i];
+          victimPageFrame = i;
+      }
+  }
   
   return victimPageFrame;  // return the page frame to replace
 }
