@@ -132,9 +132,6 @@ int OptimalPageReplacement(const vector<int> &trace,
                            const vector<int> &frameUsage,
                            const vector<int> accessTime) {
     int victimPageFrame = 0;
-    // TODO: implement the page replacement strategy
-    //       here, setting victimPageFrame to the frame
-    //       number of the page to be replaced.
 
     //create a way of keeping track of future usage
     int fUse[frameCount];
@@ -144,34 +141,33 @@ int OptimalPageReplacement(const vector<int> &trace,
         fUse[i] = 0;
     }
     //check each page frame's future usage
-    for(int i=traceIndex; i<trace.size(); i++)
+    for(int i=0; i<frameCount; i++)
     {
-        for(int j=0; j<frameCount; j++)
-        { 
-            //cout << "page frame: " << frameUsage[j*trace.size() + traceIndex] << "\n";
-            
-            //if the page frame's page does not equal the reference string
-            if(!(frameUsage[j*trace.size() + (traceIndex-1)] == trace[i-1]))
+        int k = 0; //sentinel value to see if the value has been found for the first time
+        for(int j=traceIndex; j<trace.size(); j++)
+        {
+            //if found once stop adding to fUse, if the value is not found, add to fUse            
+            if((frameUsage[i*trace.size() + (traceIndex-1)]) == trace[j])
             {
-                fUse[j]++;
+                k = k + 1;
+            }
+            else if(!((frameUsage[i*trace.size() + (traceIndex-1)])== trace[j])&&(k==0))
+            {
+                fUse[i]++;
             }
         }
-    } 
+    }
     //pick the largest of the fUse elements to set as the victim page frame
     int largest = fUse[0];
     
     for(int i=1; i<frameCount; i++)
     {
         if(largest<fUse[i])
+        {
+            largest = fUse[i];
             victimPageFrame = i;
+        }               
     }
-    //print out fUse
-    for(int i=0; i<frameCount; i++)
-    {
-        cout<<fUse[i]<<" ";
-    }
-    cout << "\n";
-    cout << "Victim page frame is: " << victimPageFrame << "\n";
     
     return victimPageFrame; // return the page frame to replace
 }
