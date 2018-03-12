@@ -20,6 +20,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <algorithm>
+#include <iterator>
 
 using std::cin;
 using std::cout;
@@ -195,19 +197,31 @@ int FIFOPageReplacement(const vector<int> &trace,
   // TODO: implement the page replacement strategy
   //       here, setting victimPageFrame to the frame
   //       number of the page to be replaced.
-  int oldest = accessTime[0];
-  for(int i=1; i<accessTime.size(); i++)
+  
+  //create way to track previous use
+  std::vector<int> pUse(frameCount);
+  //fill array
+  for (int i = 0; i < frameCount; i++) 
   {
-      if(oldest > accessTime[i])
-      {
-          oldest = accessTime[i];
-          victimPageFrame = i;
-      }
-  }  
-  cout << "Trace index: " << traceIndex << "\n";
-  for(int i=0; i<accessTime.size(); i++)
-  {
-      cout << accessTime[i] << " ";
+      pUse[i] = 0;
+  }
+  //count number of times used
+  for (int j = 0; j < pUse.size(); j++) {
+    for (int i = 0; i < traceIndex; i++ ) {
+        //cout << "Frame Value: " << (frameUsage[j*trace.size() + (traceIndex-1)]) << std::endl;
+        //cout << "Trace Value: " << trace[i] << std::endl;
+        cout << frameUsage[i*trace.size() + traceIndex] << " \n"; 
+        if ((frameUsage[i*trace.size() + traceIndex]) == trace[j]) {
+            //cout << frameUsage[i*trace.size() + traceIndex] << " \n"; 
+            cout << "Trace: " << trace[j] << " \n";
+            pUse[j]++;
+        }
+    }
+  }
+  
+  cout << "Trace Index: " << traceIndex << std::endl;
+  for (int i = 0; i < pUse.size(); i++) {
+      cout << pUse[i] << " ";
   }
   cout << "\n";
   
