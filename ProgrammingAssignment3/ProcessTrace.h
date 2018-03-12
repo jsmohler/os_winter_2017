@@ -114,6 +114,7 @@ public:
    * 
    */
   void Execute(uint32_t);
+  bool get_executing() {return executing;}
   
 private:
   // Trace file
@@ -142,6 +143,9 @@ private:
   
   //Within Quote
   bool in_quota;
+  
+  //Executing
+  bool executing;
   
   /**
    * ParseCommand - parse a trace file command.

@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/PageFrameAllocator.o \
 	${OBJECTDIR}/ProcessTrace.o \
+	${OBJECTDIR}/Scheduler.o \
 	${OBJECTDIR}/main.o
 
 # Test Directory
@@ -83,6 +84,11 @@ ${OBJECTDIR}/ProcessTrace.o: ProcessTrace.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ProcessTrace.o ProcessTrace.cpp
+
+${OBJECTDIR}/Scheduler.o: Scheduler.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Scheduler.o Scheduler.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -131,6 +137,19 @@ ${OBJECTDIR}/ProcessTrace_nomain.o: ${OBJECTDIR}/ProcessTrace.o ProcessTrace.cpp
 	    $(COMPILE.cc) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ProcessTrace_nomain.o ProcessTrace.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/ProcessTrace.o ${OBJECTDIR}/ProcessTrace_nomain.o;\
+	fi
+
+${OBJECTDIR}/Scheduler_nomain.o: ${OBJECTDIR}/Scheduler.o Scheduler.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/Scheduler.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Scheduler_nomain.o Scheduler.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/Scheduler.o ${OBJECTDIR}/Scheduler_nomain.o;\
 	fi
 
 ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp 

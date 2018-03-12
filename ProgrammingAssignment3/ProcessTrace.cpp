@@ -32,7 +32,7 @@ using std::vector;
 ProcessTrace::ProcessTrace(MMU &memory_, 
                            PageFrameAllocator &allocator_, 
                            string file_name_) 
-: memory(memory_), allocator(allocator_), file_name(file_name_), line_number(0), in_quota(true) {
+: memory(memory_), allocator(allocator_), file_name(file_name_), line_number(0), in_quota(true), executing(true) {
   // Open the trace file.  Abort program if can't open.
   trace.open(file_name, std::ios_base::in);
   if (!trace.is_open()) {
@@ -53,13 +53,20 @@ void ProcessTrace::Execute(uint32_t num) {
   process_number = num;
   
   // Set up PMCB and empty 1st level page table
-  vector<Addr> allocated;
-  allocator.Allocate(1, allocated);
-  vmem_pmcb = mem::PMCB(true, allocated[0]);  // initialize PMCB
+  if (line_number == 1) {
+    vector<Addr> allocated;
+    mem::PMCB current;
+    memory.get_PMCB(current);
+    current.vm_enable = false;
+    memory.set_PMCB(current);
+    allocator.Allocate(1, allocated);
+    vmem_pmcb = mem::PMCB(true, allocated[0]);  // initialize PMCB
+  }
+  
   memory.set_PMCB(vmem_pmcb);
   
   // Select the command to execute
-  while (ParseCommand(line, cmd, cmdArgs)) {
+  if (ParseCommand(line, cmd, cmdArgs)) {
     if (cmd == "compare") {
       CmdCompare(line, cmd, cmdArgs);  // get and compare multiple bytes
     } else if (cmd == "put") {
@@ -81,19 +88,21 @@ void ProcessTrace::Execute(uint32_t num) {
         exit(2);
       }
     }
+    memory.get_PMCB(vmem_pmcb);
+  } else {
+    cout << std::dec << line_number << ":" << process_number << ":TERMINATED" << "\n";
+    executing = false;
   }
-  cout << std::dec << line_number << ":" << process_number << ":TERMINATED" << "\n";
     
 }
 
-bool ProcessTrace::ParseCommand(
-    string &line, string &cmd, vector<uint32_t> &cmdArgs) {
+bool ProcessTrace::ParseCommand(string &line, string &cmd, vector<uint32_t> &cmdArgs) {
   cmdArgs.clear();
   line.clear();
   cmd.clear();
   
   // Read next line
-  if (std::getline(trace, line) && in_quota) {
+  if (in_quota && std::getline(trace, line)) {
     ++line_number;
     cout << std::dec << line_number << ":" << process_number << ":" << line << "\n";
     
@@ -113,12 +122,8 @@ bool ProcessTrace::ParseCommand(
       }
     }
     return true;
-  } else if (trace.eof()) {
-      return false;
   } else {
-    cerr << "ERROR: getline failed on trace file: " << file_name 
-            << "at line " << line_number << "\n";
-    exit(2);
+      return false;
   }
 }
 
@@ -134,9 +139,7 @@ void ProcessTrace::CmdAlloc(const vector<uint32_t> &cmdArgs) {
   Addr pt_base = vmem_pmcb.page_table_base;
   
   // Allocate pages, initialized to writable
-  //cout << "Quota: " << quota << std::endl;
-  //cout << "FC: " << num_allocated << std::endl;
-  if (quota > num_allocated+1) {
+  if (quota >= num_allocated+count) {
       while (count-- > 0) {
         AllocateAndMapPage(vaddr);
         vaddr += 0x1000;
@@ -178,10 +181,14 @@ void ProcessTrace::CmdPut(const string &line,
   // Put multiple bytes starting at specified address
   uint32_t addr = cmdArgs.at(0);
   size_t num_bytes = cmdArgs.size() - 1;
+  Addr remaining_bytes = num_bytes;
   uint8_t buffer[num_bytes];
+
   try {
     for(int i = 1; i < cmdArgs.size(); ++i) {
       buffer[i - 1] = cmdArgs.at(i);
+      remaining_bytes--;
+      memory.put_byte(addr, &buffer[i-1]);
     }
     memory.put_bytes(addr, num_bytes, buffer);
   }  catch(PageFaultException e) {
@@ -192,6 +199,11 @@ void ProcessTrace::CmdPut(const string &line,
         CmdAlloc(args);
         memory.set_PMCB(current_state);
         num_allocated++;
+        std::vector<uint32_t> restart = {current_state.next_vaddress+1};
+        for (int i = 0; i < remaining_bytes; i++) {
+            restart.push_back(cmdArgs.size()-(remaining_bytes - i));
+        }
+        CmdPut("", "", restart);
       } catch (QuotaExceededException e) {
         current_state.operation_state = mem::PMCB::NONE;
         memory.set_PMCB(current_state);
@@ -347,6 +359,7 @@ void ProcessTrace::PrintAndClearException(const string &type,
 }
 
 void ProcessTrace::AllocateAndMapPage(Addr vaddr) {
+    try {
   // Get offset in L1 table of L2 entry for vaddr  
   Addr pt_base = vmem_pmcb.page_table_base;
   Addr pt_l1_offset = vaddr >> (kPageSizeBits + kPageTableSizeBits);
@@ -387,6 +400,9 @@ void ProcessTrace::AllocateAndMapPage(Addr vaddr) {
   l2_entry = allocated[0] | kPTE_PresentMask | kPTE_WritableMask;
   memory.put_bytes(l2_entry_addr, sizeof(PageTableEntry),
                  reinterpret_cast<uint8_t*> (&l2_entry));
+    } catch (PageFaultException e) {
+        cout << "ugh\n";
+    }
 }
 
 void ProcessTrace::SetWritableStatus(Addr vaddr, bool writable) {

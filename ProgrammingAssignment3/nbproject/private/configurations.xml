@@ -24,7 +24,6 @@
       </nativedebugger>
       <runprofile version="9">
         <runcommandpicklist>
-          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" trace5v_exceptions.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" trace2v_multi-page.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" trace3v_high-addr.txt</runcommandpicklistitem>
@@ -33,6 +32,7 @@
           <runcommandpicklistitem>"${OUTPUT_PATH}" trace6v_pagefaults.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" trace1v.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" program3 2 trace1v.txt trace2v_multi-page.txt trace3v_high-addr.txt trace4v_multi-l2-tables.txt trace5v_wprotect.txt trace6v_pagefaults.txt > trace1-6_ts2.out</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" program3 3 trace1v.txt trace2v_multi-page.txt trace3v_high-addr.txt trace4v_multi-l2-tables.txt trace5v_wprotect.txt trace6v_pagefaults.txt trace1v.txt trace2v_multi-page.txt trace3v_high-addr.txt trace4v_multi-l2-tables.txt trace5v_wprotect.txt trace6v_pagefaults.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" program3 2 trace1v.txt trace2v_multi-page.txt trace3v_high-addr.txt trace4v_multi-l2-tables.txt trace5v_wprotect.txt trace6v_pagefaults.txt</runcommandpicklistitem>
         </runcommandpicklist>
         <runcommand>"${OUTPUT_PATH}" program3 2 trace1v.txt trace2v_multi-page.txt trace3v_high-addr.txt trace4v_multi-l2-tables.txt trace5v_wprotect.txt trace6v_pagefaults.txt</runcommand>

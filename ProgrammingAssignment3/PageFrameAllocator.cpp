@@ -11,6 +11,7 @@
 #include <array>
 #include <cstring>
 #include <sstream>
+#include <iostream>
 
 using mem::Addr;
 using mem::kPageSize;
@@ -47,10 +48,10 @@ bool PageFrameAllocator::Allocate(Addr count,
       // De-link frame from head of free list
       memory.get_bytes(reinterpret_cast<uint8_t*>(&free_list_head), 
                        free_list_head, sizeof(Addr));
-      
+
       // Clear allocated page to all 0
       memory.put_bytes(page_frames.back(), kPageSize, &zero_page[0]);
-      
+ 
       --page_frames_free;
     }
     return true;

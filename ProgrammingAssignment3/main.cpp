@@ -24,25 +24,36 @@
 int main(int argc, char* argv[]) {
   mem::MMU memory(1024);
   PageFrameAllocator allocator(memory);
-  ProcessTrace trace(memory, allocator, argv[8]);
-  trace.Execute(1);
   
-//  int num_processes = argc - 3;
-//  int time_slice = atoi(argv[2]);
-//  std::vector<ProcessTrace*> traces;
-//  
-//  for (int i = 0; i < num_processes; i++) {
-//    ProcessTrace* trace = new ProcessTrace(memory, allocator, argv[i+3]);
-//    traces.push_back(trace);
-//  }
-//  
-//  std::vector<mem::Addr> allocated;
-//  
-//  for (int i = 0; i < num_processes; i++) {
-//      for (int m = 0; m < time_slice; m++) {
-//          traces[i]->Execute(i+1, allocated);
-//      }
-//  }
+  int num_processes = argc-3;
+  int time_slice = atoi(argv[2]);
+  std::vector<ProcessTrace*> traces;
+  std::vector<int> num_process;
+  
+  for (int i = 0; i < argc-3; i++) {
+    ProcessTrace* trace = new ProcessTrace(memory, allocator, argv[i+3]);
+    traces.push_back(trace);
+    num_process.push_back(i+1);
+  }
+  
+  bool executing = true;
+  
+  
+  while (executing) {
+      executing = false;
+      for (int i = 0; i < traces.size(); i++) {
+        for (int m = 0; m < time_slice; m++) {
+            if (traces[i]->get_executing())   {
+                traces[i]->Execute(num_process[i]);
+            }
+        }
+        if (! traces[i]->get_executing()) {
+            traces.erase(traces.begin() + i);
+            num_process.erase(num_process.begin() + i);
+        }
+        executing |= traces[i]->get_executing();
+      }
+  }
   
   return 0;
 }
