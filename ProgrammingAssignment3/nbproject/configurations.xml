@@ -7,7 +7,6 @@
       <itemPath>PageFrameAllocator.h</itemPath>
       <itemPath>ProcessTrace.h</itemPath>
       <itemPath>QuotaExceededException.h</itemPath>
-      <itemPath>Scheduler.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -18,7 +17,6 @@
                    projectFiles="true">
       <itemPath>PageFrameAllocator.cpp</itemPath>
       <itemPath>ProcessTrace.cpp</itemPath>
-      <itemPath>Scheduler.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -96,10 +94,6 @@
       <item path="ProcessTrace.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="QuotaExceededException.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Scheduler.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Scheduler.h" ex="false" tool="3" flavor2="0">
       </item>
       <folder path="TestFiles">
         <linkerTool>
@@ -190,10 +184,6 @@
       <item path="ProcessTrace.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="QuotaExceededException.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Scheduler.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Scheduler.h" ex="false" tool="3" flavor2="0">
       </item>
       <folder path="TestFiles/f1">
         <cTool>

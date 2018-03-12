@@ -47,10 +47,12 @@ int main(int argc, char* argv[]) {
                 traces[i]->Execute(num_process[i]);
             }
         }
+      }
+      for (int i = 0; i < traces.size(); i++) {
         if (! traces[i]->get_executing()) {
             traces.erase(traces.begin() + i);
             num_process.erase(num_process.begin() + i);
-        }
+        } 
         executing |= traces[i]->get_executing();
       }
   }
