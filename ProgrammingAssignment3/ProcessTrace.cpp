@@ -4,7 +4,7 @@
 
 /* 
 /* 
- * File:   main.cpp
+ * File:   ProcessTrace.cpp
  * Author: Jordan Mohler, Cedric Smith, Lexie Hermosura
  *
  */
@@ -138,7 +138,7 @@ void ProcessTrace::CmdAlloc(const vector<uint32_t> &cmdArgs) {
   
   Addr pt_base = vmem_pmcb.page_table_base;
   
-  // Allocate pages, initialized to writable
+  // Allocate pages, initialized to writable if within quota
   if (quota >= num_allocated+count) {
       while (count-- > 0) {
         AllocateAndMapPage(vaddr);

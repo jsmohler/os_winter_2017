@@ -24,18 +24,18 @@
       </nativedebugger>
       <runprofile version="9">
         <runcommandpicklist>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" trace3v_high-addr.txt</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" trace3v_high-addr.txt > trace3v_high-addr.txt.out</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" trace5v_wprotect.txt</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" trace6v_pagefaults.txt > trace6v_pagefaults.txt.out</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" trace4v_multi-l2-tables.txt > trace4v_multi-l2-tables.txt.out</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" trace2v_multi-page.txt > trace2v_multi-page.txt.out</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" trace5v_wprotect.txt > trace5v_wprotect.txt</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" trace5v_wprotect.txt > trace5v_wprotect.txt.out</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" program3 2 trace1v.txt trace2v_multi-page.txt trace3v_high-addr.txt trace4v_multi-l2-tables.txt trace5v_wprotect.txt trace6v_pagefaults.txt > trace1-6_ts2.out</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" program3 3 trace1v.txt trace2v_multi-page.txt trace3v_high-addr.txt trace4v_multi-l2-tables.txt trace5v_wprotect.txt trace6v_pagefaults.txt trace1v.txt trace2v_multi-page.txt trace3v_high-addr.txt trace4v_multi-l2-tables.txt trace5v_wprotect.txt trace6v_pagefaults.txt > trace1-6x2_ts3.out</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"  trace1v.txt</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"  trace1v.txt > xtrace1v.txt.out</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"  trace2v_multi-page.txt > xtrace2v_multi-page.txt.out</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"  trace3v_high-addr.txt > xtrace3v_high-addr.txt.out</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"  trace4v_multi-l2-tables.txt > xtrace4v_multi-l2-tables.txt.out</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"  trace5v_wprotect.txt > xtrace5v_wprotect.txt.out</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"  trace6v_pagefaults.txt > xtrace6v_pagefaults.txt.out</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"  program3 2 trace1v.txt trace2v_multi-page.txt trace3v_high-addr.txt trace4v_multi-l2-tables.txt trace5v_wprotect.txt trace6v_pagefaults.txt > trace1-6_ts2.out</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"  program3 2 trace1v.txt trace2v_multi-page.txt trace3v_high-addr.txt trace4v_multi-l2-tables.txt trace5v_wprotect.txt trace6v_pagefaults.txt > xtrace1-6_ts2.out</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"  program3 3 trace1v.txt trace2v_multi-page.txt trace3v_high-addr.txt trace4v_multi-l2-tables.txt trace5v_wprotect.txt trace6v_pagefaults.txt trace1v.txt trace2v_multi-page.txt trace3v_high-addr.txt trace4v_multi-l2-tables.txt trace5v_wprotect.txt trace6v_pagefaults.txt > xtrace1-6x2_ts3.out</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" program3 3 trace1v.txt trace2v_multi-page.txt trace3v_high-addr.txt trace4v_multi-l2-tables.txt trace5v_wprotect.txt trace6v_pagefaults.txt trace1v.txt trace2v_multi-page.txt trace3v_high-addr.txt trace4v_multi-l2-tables.txt trace5v_wprotect.txt trace6v_pagefaults.txt > trace1-6x2_ts3.out</runcommand>
+        <runcommand>"${OUTPUT_PATH}"  program3 3 trace1v.txt trace2v_multi-page.txt trace3v_high-addr.txt trace4v_multi-l2-tables.txt trace5v_wprotect.txt trace6v_pagefaults.txt trace1v.txt trace2v_multi-page.txt trace3v_high-addr.txt trace4v_multi-l2-tables.txt trace5v_wprotect.txt trace6v_pagefaults.txt > xtrace1-6x2_ts3.out</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <console-type>2</console-type>

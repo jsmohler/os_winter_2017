@@ -10,14 +10,12 @@
  * Any output should also use hexadecimal format for numeric data.
  * 
  * Allocate Memory
- * alloc vaddr size
  * Allocate virtual memory for size bytes, starting at virtual address vaddr. 
  * The starting address, vaddr, and the byte count, size, must be exact 
- * multiples of the page size (0x1000). The first line of the file must be an 
- * alloc command. Subsequent alloc commands add additional blocks of allocated 
- * virtual memory, they do not remove earlier allocations. All pages should be 
+ * multiples of the page size (0x1000). All pages should be 
  * marked Writable in the 1st and 2nd level page tables when initially allocated.
- * All newly-allocated memory must be initialized to all 0.
+ * All newly-allocated memory must be initialized to all 0. Called when putting,
+ * filling, or copying bytes throws a PageFaultException
  * 
  * Compare bytes
  * compare addr expected_values
@@ -30,16 +28,21 @@
  * Put Bytes
  * put addr values
  * Store values starting at addr; values is a list of byte values, separated 
- * by white space. 
+ * by white space. If page referenced by address does not exist (a PageFaultException
+ * is thrown), a page will allocated if it does not exceed the quota.
  * 
  * Fill Bytes
  * fill addr count value
- * Store count copies of value starting at addr.
+ * Store count copies of value starting at addr. If page referenced by address 
+ * does not exist (a PageFaultException is thrown), a page will allocated if 
+ * it does not exceed the quota.
  * 
  * Copy Bytes
  * copy dest_addr src_addr count
  * Copy count bytes from src_addr to dest_addr. The source and destination 
- * ranges will not overlap.
+ * ranges will not overlap. If page referenced by destination address does not 
+ * exist (a PageFaultException is thrown), a page will allocated if it does not 
+ * exceed the quota.
  * 
  * Dump Bytes
  * dump addr count
@@ -67,11 +70,15 @@
  * The # character in the first column means the remainder of the line should 
  * be treated as a comment. The command should be echoed to output in the same 
  * way as other commands, but should otherwise be ignored.
+ * 
+ * Quota
+ * quota amount
+ * Designates the maximum number of pages that a process may allocate
  */
 
 /* 
  * File:   ProcessTrace.h
- * Author: Mike Goss <mikegoss@cs.du.edu>
+ * Author: Jordan Mohler, Lexie Hermosura, Cedric Smith
  *
  */
 
@@ -114,6 +121,11 @@ public:
    * 
    */
   void Execute(uint32_t);
+  
+  /*
+   * Returns executing data members, which determines whether or not a process
+   * has terminated
+   */
   bool get_executing() {return executing;}
   
 private:
@@ -159,6 +171,14 @@ private:
   bool ParseCommand(
       std::string &line, std::string &cmd, std::vector<uint32_t> &cmdArgs);
   
+  /*
+   * Called to allocate pages by CmdPut, CmdFill, and CmdCopy.
+   * @param cmdArgs arguments to command
+   * @throws QuotaExceededException if number of pages already allocated
+   * is equal to or greater than the quota
+   */
+   void CmdAlloc(const std::vector<uint32_t> &cmdArgs);
+  
   /**
    * Command executors. Arguments are the same for each command.
    *   Form of the function is CmdX, where "X' is the command name, capitalized.
@@ -166,7 +186,6 @@ private:
    * @param cmd command, converted to all lower case
    * @param cmdArgs arguments to command
    */
-  void CmdAlloc(const std::vector<uint32_t> &cmdArgs);
   void CmdCompare(const std::string &line, 
               const std::string &cmd, 
               const std::vector<uint32_t> &cmdArgs);

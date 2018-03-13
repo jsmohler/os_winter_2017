@@ -19,7 +19,7 @@
 class QuotaExceededException : public std::exception {
 public:
   /**
-   * Constructor (address info is in PMCB)
+   * Exception thrown when trying to allocate more pages than the quota designates as allowed
    */
   QuotaExceededException(void) {std::cout << "ERROR: memory quota a exceeded\n";}
 };
